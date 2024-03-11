@@ -5,5 +5,5 @@
 
 | Name Surname (initials) | GUID                                     |
 | ----------------------- | ---------------------------------------- |
-| Szymon Giergiel (SG)    | `{FD9D086C-532F-4AAC-BB99-69D7798837D8}` |
-| Mateusz Pawlak  (MP)    | `{44FBFCF5-4430-4964-878D-1867DC679E0D}` |
+| Szymon Giergiel (SG)    | `{4372ef9e-07a0-4e81-95a0-78bd107c4120}` |
+| Mateusz Pawlak  (MP)    | `{ad5171e8-bd1e-4dc9-b5c9-3bc4d8d507db}` |
