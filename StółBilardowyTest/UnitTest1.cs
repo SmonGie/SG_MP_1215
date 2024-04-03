@@ -1,4 +1,4 @@
-namespace StolBilardowy.nUnitTests
+namespace StółBilardowyTest
 {
     public class Tests
     {
