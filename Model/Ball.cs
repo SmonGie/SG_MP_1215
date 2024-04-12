@@ -27,6 +27,17 @@ namespace Model
         PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }
 
+    private Random Random = new Random();
+
+
     public event PropertyChangedEventHandler PropertyChanged;
+
+        private void MoveABall(object state)
+        {
+            if (state != null)
+                throw new ArgumentOutOfRangeException(nameof(state));
+            Y = Y + (Random.NextDouble() - 0.5) * 5;
+            X = X + (Random.NextDouble() - 0.5) * 5;
+        }
     }
 }
