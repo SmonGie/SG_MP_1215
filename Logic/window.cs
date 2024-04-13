@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Logic
 {
-    public class MyWindow
+    public class window
     {
         public int Width { get; init; }
 
@@ -22,7 +22,7 @@ namespace Logic
         public Vector2 GetYBoundry() => new Vector2(0, Height);
 
         // Inicjalizuje nową instancję klasy MyWindow z określoną szerokością i wysokością
-        public MyWindow(int width, int height)
+        public window(int width, int height)
         {
             Width = width;
             Height = height;
