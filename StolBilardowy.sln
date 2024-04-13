@@ -18,9 +18,12 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Model", "Model\Model.csproj
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Presentation", "Presentation", "{29C5DD0E-E5CB-4BB9-B569-1016ADC8AF40}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Logic", "Logic\Logic.csproj", "{3657685D-6401-41F5-A0D6-7160EC1B8740}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Logic", "Logic\Logic.csproj", "{3657685D-6401-41F5-A0D6-7160EC1B8740}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Data", "Data\Data.csproj", "{E9409B87-EC8D-41C3-9441-EB571DEF74A0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Data", "Data\Data.csproj", "{E9409B87-EC8D-41C3-9441-EB571DEF74A0}"
+	ProjectSection(ProjectDependencies) = postProject
+		{3657685D-6401-41F5-A0D6-7160EC1B8740} = {3657685D-6401-41F5-A0D6-7160EC1B8740}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
