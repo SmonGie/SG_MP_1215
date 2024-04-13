@@ -19,7 +19,7 @@ namespace Model
         public IBillardBall Ball { get; internal set; }
     }
 
-    public abstract class ModelAbstractApi
+    public abstract class AbstractLogicApi
     {
         public abstract void Start();
     }
