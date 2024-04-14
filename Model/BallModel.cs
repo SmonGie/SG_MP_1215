@@ -4,8 +4,8 @@ using System.Linq;
 using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
-
 using Logic;
+using Vector2 = Logic.Vector2;
 
 namespace Model
 {

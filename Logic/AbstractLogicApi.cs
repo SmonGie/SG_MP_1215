@@ -21,12 +21,12 @@ namespace Logic
             // Return a new instance of the SimulationController class, passing in the provided AbstractDataAPI instance or creating a new instance of AbstractDataAPI if no instance is provided.
             return new SimulationController(data ?? AbstractDataApi.CreateInstance());
         }
-        public interface IBall
-        {
-            Vector2 Velocity { get; }
-            Vector2 Position { get; }
-            int Radius { get; }
-            int Diameter { get; }
-        }
+    }
+    public interface IBall
+    {
+        Vector2 Velocity { get; }
+        Vector2 Position { get; }
+        int Radius { get; }
+        int Diameter { get; }
     }
 }

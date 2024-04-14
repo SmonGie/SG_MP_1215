@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Numerics;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Numerics;
 using Logic;
 
 namespace Model
@@ -35,8 +30,8 @@ namespace Model
 
     public interface IBallModel
     {
-        Vector2 Velocity { get; }
-        Vector2 Position { get; }
+        Logic.Vector2 Velocity { get; }
+        Logic.Vector2 Position { get; }
         int Radius { get; }
         int Diameter { get; }
     }

@@ -15,7 +15,7 @@ namespace Model
         public int Height => _window.Height; // Property to get the height of the Window
 
         // Constructor that creates a WindowModel with a reference to a Window object
-        public ModelWindow(ModelWindow window)
+        public ModelWindow(Window window)
         {
             _window = window;
         }

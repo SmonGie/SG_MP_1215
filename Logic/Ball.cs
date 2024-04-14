@@ -57,6 +57,10 @@ namespace Logic
 
         private Random Random = new Random();
 
+        public override int GetHashCode()
+        {
+            return HashCode.Combine(Velocity, Position, Diameter);
+        }
 
         public void Move(Vector2 xBorder, Vector2 yBorder ,float force = 0.5f)
         {
@@ -76,7 +80,7 @@ namespace Logic
             }
         }
 
-        public bool Equals(Object? other)
+        public override bool Equals(Object? other)
         {
             return other is Ball ball
                 && Equals(ball);
