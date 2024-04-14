@@ -17,41 +17,41 @@ namespace Logic
             : this(new Vector2(xVelocity, yVelocity), new Vector2(x, y), diameter) { }
         public Ball(Vector2 velocity, Vector2 position, int diameter)
         {
-            this.velocity=velocity;
-            this.position=position;
-            this.diameter=diameter;
-            this.radius = diameter/2 ;
+            _velocity=velocity;
+            _position=position;
+            _diameter=diameter;
+            _radius = diameter/2 ;
 
 
         }
-        private Vector2 velocity;
-        private Vector2 position;
-        private int diameter;
-        private int radius;
+        private Vector2 _velocity;
+        private Vector2 _position;
+        private int _diameter;
+        private int _radius;
 
         #region IBall
         public Vector2 Velocity
         {
-            get { return this.velocity; }
-            private set { this.velocity = value; }
+            get { return _velocity; }
+            private set { _velocity = value; }
         }
 
         public Vector2 Position
         {
-            get { return this.position; }
-            private set { this.position = value; }
+            get { return _position; }
+            private set { _position = value; }
         }
 
         public int Radius
         {
-            get { return this.radius; }
-            private set { this.radius = value; }
+            get { return _radius; }
+            private set { _radius = value; }
         }
 
         public int Diameter
         {
-            get { return this.diameter; }
-            private set { this.diameter = value; }
+            get { return _diameter; }
+            private set { _diameter = value; }
         }
         #endregion
 
@@ -64,19 +64,19 @@ namespace Logic
 
         public void Move(Vector2 xBorder, Vector2 yBorder ,float force = 0.5f)
         {
-            if (velocity.VectorEqualsZero())
+            if (_velocity.VectorEqualsZero())
                 return;
-            position += velocity * force;
+            _position += _velocity * force;
 
-            var (x, y) = position;
+            var (x, y) = _position;
             
-            if(!x.CheckBoundry(xBorder.X, xBorder.Y, radius))
+            if(!x.CheckBoundry(xBorder.X, xBorder.Y, _radius))
             {
-                velocity = new Vector2(-velocity.X, velocity.Y);
+                _velocity = new Vector2(-_velocity.X, _velocity.Y);
             }
-            if(!y.CheckBoundry(yBorder.X, yBorder.X, radius))
+            if(!y.CheckBoundry(yBorder.X, yBorder.X, _radius))
             {
-                velocity = new Vector2(velocity.X, -velocity.Y);
+                _velocity = new Vector2(_velocity.X, -_velocity.Y);
             }
         }
 

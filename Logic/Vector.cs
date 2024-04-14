@@ -14,8 +14,8 @@ namespace Logic
 
         public Vector2(double x, double y)
         {
-            x = X;
-            y = Y;
+            X = x;
+            Y = y;
         }
 
         public static double distance_vectors(Vector2 pkt_1, Vector2 pkt_2)
