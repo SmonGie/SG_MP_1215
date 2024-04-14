@@ -1,5 +1,4 @@
-﻿using System.Numerics;
-using Logic;
+﻿using Logic;
 
 namespace Model
 {
@@ -30,8 +29,8 @@ namespace Model
 
     public interface IBallModel
     {
-        Logic.Vector2 Velocity { get; }
-        Logic.Vector2 Position { get; }
+        Vector2 Velocity { get; }
+        Vector2 Position { get; }
         int Radius { get; }
         int Diameter { get; }
     }

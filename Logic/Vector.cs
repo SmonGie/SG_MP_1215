@@ -10,8 +10,8 @@ namespace Logic
     public struct Vector2 : IEquatable<Vector2>
     {
         //Wlasnosci X i Y ktore pozwalaja na wywolanie getterow i setterow Vector2
-        public double Y { get; set; }
         public double X { get; set; }
+        public double Y { get; set; }
         //Konstruktor ktory tworzy wektor z specyficznym X i Y
         public Vector2(double x, double y)
         {

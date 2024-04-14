@@ -56,6 +56,7 @@ namespace Logic
             get { return _diameter; }
             private set { _diameter = value; }
         }
+
         #endregion
         //zainicjuj generator losowosci
         private Random Random = new Random();
@@ -65,27 +66,27 @@ namespace Logic
             return HashCode.Combine(Velocity, Position, Diameter);
         }
         //Zdefiniuj metode dla poruszania sie ze specyficznymi wartosciami granic x i y
-        public void Move(Vector2 xBorder, Vector2 yBorder ,float force = 0.5f)
+        public void Move(Vector2 xBorder, Vector2 yBorder ,float force = 1f)
         {
-            if (_velocity.VectorEqualsZero()) //jesli kula nie ma predkosci nie poruszaj kula
+            if (Velocity.VectorEqualsZero()) //jesli kula nie ma predkosci nie poruszaj kula
                 return;
-            _position += _velocity * force;
+            Position += Velocity * force;
 
-            var (x, y) = _position;
+            var (X, Y) = Position;
             
-            if(!x.CheckBoundry(xBorder.X, xBorder.Y, _radius))
+            if(!X.CheckBoundry(xBorder.X, xBorder.Y, Radius))
             {
-                _velocity = new Vector2(-_velocity.X, _velocity.Y); // jesli kula uderzy w sciane, odwroc predkosc
+                Velocity = new Vector2(-Velocity.X, Velocity.Y); // jesli kula uderzy w sciane, odwroc predkosc
             }
-            if(!y.CheckBoundry(yBorder.X, yBorder.X, _radius))
+            if(!Y.CheckBoundry(yBorder.X, yBorder.Y, Radius))
             {
-                _velocity = new Vector2(_velocity.X, -_velocity.Y); //jesli kula uderzy w sciane odwroc predkosc
+                Velocity = new Vector2(Velocity.X, -Velocity.Y); //jesli kula uderzy w sciane odwroc predkosc
             }
         }
         //nadpisuje i porownuje dwa obiekty typu Ball(czy sa rowne)
-        public override bool Equals(Object? other)
+        public override bool Equals(object? obj)
         {
-            return other is Ball ball
+            return obj is Ball ball
                 && Equals(ball);
         }
         //definiuje metode aby sprawdzic dwa obiekty typu Ball(czy sa rowne)

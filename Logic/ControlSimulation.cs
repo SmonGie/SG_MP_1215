@@ -21,7 +21,7 @@ namespace Logic
         }
         public override void SpawnBalls(int numberOfBalls)
         {
-            _manageSimulation.RandomBallSpawnPosision(numberOfBalls); // losowo uwtorz liczbe kul w symulacji
+            _manageSimulation.RandomBallSpawnPosition(numberOfBalls); // losowo uwtorz liczbe kul w symulacji
         }
 
         internal override IEnumerable<Ball> Balls => _manageSimulation.Balls; // Zaimplementuj wlanosci kul z interfejsu AbstractLogicApi

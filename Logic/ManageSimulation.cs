@@ -25,14 +25,14 @@ namespace Logic
             this.Radius = Diameter / 2; // przechowuj promien kuli
         }
 
-        public void ballsForce(float force = 0.05f) //uzyj sily do kazdej kuli w symulacji
+        public void ballsForce(float force = 0.1f) //uzyj sily do kazdej kuli w symulacji
         {
             foreach( var ball in Balls)
             {
                 ball.Move(window.GetXBoundry, window.GetYBoundry, force);
             }
         }
-        private Vector2 RandomBallPosision() 
+        private Vector2 RandomBallPosition() 
         {
             int x = random.Next(Radius, window.Width - Radius); //wygeneruj losowo pozycje(x) kuli
             int y = random.Next(Radius, window.Height - Radius); ////wygeneruj losowo pozycje(y) kuli
@@ -48,13 +48,13 @@ namespace Logic
             return new Vector2(x, y);    //zwroc wektor przyspieszenia
         }
 
-        public IList<Ball> RandomBallSpawnPosision(int ballNumber) 
+        public IList<Ball> RandomBallSpawnPosition(int ballNumber) 
         {
             Balls = new List<Ball>(ballNumber); //Stworz liste o wielkosci rownej ballNumber
 
             for(int i = 0; i < ballNumber; i++)
             {
-                Vector2 position = RandomBallPosision(); // Wygeneruj losowo pozycje
+                Vector2 position = RandomBallPosition(); // Wygeneruj losowo pozycje
                 Vector2 velocity = RandomBallVelocity(); // Wygeneuj losowa predkosc
 
                 Balls.Add(new Ball(velocity, position, Diameter)); //stworz kule o wylosowanych parametrach
