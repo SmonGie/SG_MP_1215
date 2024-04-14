@@ -1,26 +1,32 @@
-﻿using System;
+﻿using Data;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Model
+namespace Logic
 {
-    public interface IBillardBall : INotifyPropertyChanged
+    public abstract class AbstractLogicApi : IObservable<IEnumerable<IBall>>
     {
-        double vertical { get; }
-        double horizontal { get; }
-        double Radius { get; }
-    }
-
-    public class DynamicChangeArgs : EventArgs
-    {
-        public IBillardBall Ball { get; internal set; }
-    }
-
-    public abstract class AbstractLogicApi
-    {
+        internal abstract IEnumerable<Ball> Balls { get; }
+        public abstract void Simulation();
         public abstract void Start();
+        public abstract void Stop();
+        public abstract void SpawnBalls(int ballNumber);
+        public abstract IDisposable Subscribe(IObserver<IEnumerable<IBall>> observer);
+        public static AbstractLogicApi CreateInstance(AbstractDataApi? data = default)
+        {
+            // Return a new instance of the SimulationController class, passing in the provided AbstractDataAPI instance or creating a new instance of AbstractDataAPI if no instance is provided.
+            return new SimulationController(data ?? AbstractDataApi.CreateInstance());
+        }
+        public interface IBall
+        {
+            Vector2 velocity { get; }
+            Vector2 position { get; }
+            int radius { get; }
+            int diameter { get; }
+        }
     }
 }

@@ -7,28 +7,32 @@ using System.Threading.Tasks;
 
 namespace Logic
 {
-    public struct Vector : IEquatable<Vector>
+    public struct Vector2 : IEquatable<Vector2>
     {
         public double Y { get; set; }
         public double X { get; set; }
 
-        public Vector(double x, double y)
+        public Vector2(double x, double y)
         {
             x = X;
             y = Y;
         }
 
-        public static double distance_vectors(Vector pkt_1, Vector pkt_2)
+        public static double distance_vectors(Vector2 pkt_1, Vector2 pkt_2)
         {
             double X_distance = pkt_1.X- pkt_2.X;
             double Y_distance = pkt_2.Y- pkt_1.Y;
             return Math.Pow(X_distance, 2) - Math.Pow(Y_distance, 2);
         }
 
-        public void deconstruct(out double x, out double y)
+        public void Deconstruct(out double x, out double y)
         {
             x = X;
             y = Y;
+        }
+        public bool VectorEqualsZero()
+        {
+            return Equals(new Vector2(0, 0));
         }
 
 
@@ -48,9 +52,9 @@ namespace Logic
         }
 
         // odjecie od siebie dwoch wektorow
-        public static Vector operator -(Vector left_operand, Vector right_operand)
+        public static Vector2 operator -(Vector2 left_operand, Vector2 right_operand)
         {
-            return new Vector
+            return new Vector2
             {
                 X = left_operand.X - right_operand.X,
                 Y = left_operand.Y - right_operand.Y,
@@ -58,27 +62,27 @@ namespace Logic
         }
 
         //dodanie do siebie dwoch wektorow
-        public static Vector operator +(Vector left_operand, Vector right_operand)
+        public static Vector2 operator +(Vector2 left_operand, Vector2 right_operand)
         {
-            return new Vector
+            return new Vector2
             {
                 X = left_operand.X + right_operand.X,
                 Y = left_operand.Y + right_operand.Y,
             };
         }
 
-        public static Vector operator /(Vector left_operand, Vector right_operand)
+        public static Vector2 operator /(Vector2 left_operand, Vector2 right_operand)
         {
-            return new Vector
+            return new Vector2
             {
                 X = left_operand.X / right_operand.X,
                 Y = left_operand.Y / right_operand.Y,
             };
         }
 
-        public static Vector operator *(Vector left_operand, Vector right_operand)
+        public static Vector2 operator *(Vector2 left_operand, Vector2 right_operand)
         {
-            return new Vector
+            return new Vector2
             {
                 X = left_operand.X * right_operand.X,
                 Y = left_operand.Y * right_operand.Y,
@@ -88,9 +92,9 @@ namespace Logic
         
 
         // Negacja wektora
-        public static Vector operator -(Vector vector)
+        public static Vector2 operator -(Vector2 vector)
         {
-            return new Vector
+            return new Vector2
             {
                 X = -vector.X,
                 Y = -vector.Y,
@@ -100,9 +104,9 @@ namespace Logic
 
 
         // dzielenie wektora przez wartosc skalarna
-        public static Vector operator /(Vector left_operand, float d)
+        public static Vector2 operator /(Vector2 left_operand, float d)
         {
-            return new Vector
+            return new Vector2
             {
                 X = left_operand.X / d,
                 Y = left_operand.Y / d,
@@ -111,9 +115,9 @@ namespace Logic
 
 
         // mnozenie wektora przez wartosc skalarna
-        public static Vector operator *(Vector left_operand, float d)
+        public static Vector2 operator *(Vector2 left_operand, float d)
         {
-            return new Vector
+            return new Vector2
             {
                 X = left_operand.X * d,
                 Y = left_operand.Y * d,
@@ -121,13 +125,13 @@ namespace Logic
         }
 
         // Zastępuje operator równości w celu porównania dwóch wektorów Vector2
-        public static bool operator ==(Vector left_operand, Vector right_operand)
+        public static bool operator ==(Vector2 left_operand, Vector2 right_operand)
         {
             return left_operand.Equals(right_operand);
         }
 
         // Zastępuje operator nierówności w celu porównania dwóch wektorów Vector2
-        public static bool operator !=(Vector left_operand, Vector right_operand)
+        public static bool operator !=(Vector2 left_operand, Vector2 right_operand)
         {
             return !(left_operand == right_operand);
         }

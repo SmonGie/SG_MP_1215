@@ -7,22 +7,22 @@ using System.Threading.Tasks;
 
 namespace Logic
 {
-    public class window
+    public class Window
     {
         public int Width { get; init; }
 
         public int Height { get; init; }
 
-        // Pobiera Vector2 reprezentujący granice okna na osi X
-        // Składowa X Vector2 wynosi 0, a składowa Y jest równa właściwości Width
-        public Vector2 GetXBoundry() => new Vector2(0, Width);
+        // Pobiera Vector reprezentujący granice okna na osi X
+        // Składowa X Vector wynosi 0, a składowa Y jest równa właściwości Width
+        public Vector2 GetXBoundry => new Vector2(0, Width);
 
-        // Pobiera Vector2 reprezentujący granice okna na osi Y
-        // Składowa X Vector2 wynosi 0, a składowa Y jest równa właściwości Height
-        public Vector2 GetYBoundry() => new Vector2(0, Height);
+        // Pobiera Vector reprezentujący granice okna na osi Y
+        // Składowa X Vector wynosi 0, a składowa Y jest równa właściwości Height
+        public Vector2 GetYBoundry => new Vector2(0, Height);
 
         // Inicjalizuje nową instancję klasy MyWindow z określoną szerokością i wysokością
-        public window(int width, int height)
+        public Window(int width, int height)
         {
             Width = width;
             Height = height;

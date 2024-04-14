@@ -1,24 +1,87 @@
-﻿using Model;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
-
 using Data;
 
 namespace Logic
 {
-    private ISet<IObserver<IEnumerable<Ball>>> _obserwatorzy; // Zbiór obiektów typu IObserver, które będą otrzymywać aktualizacje, gdy stan symulacji ulegnie zmianie.
-    private AbstractDataAPI _dane; // Referencja do obiektu typu AbstractDataAPI dostarczającego dane symulacji.
-    private SimulationManager _menedżerSymulacji; // Obiekt typu SimulationManager zarządzający symulacją.
-    private bool czyDziała = false; // Zmienna logiczna wskazująca, czy symulacja jest w trakcie działania czy nie.
-
-    public SimulationController(AbstractDataAPI? dane = default)
+    internal class SimulationController : AbstractLogicApi
     {
-        _dane = dane ?? AbstractDataAPI.CreateInstance(); // Jeśli nie podano obiektu danych, utwórz domyślny.
-        _menedżerSymulacji = new SimulationManager(new Window(_dane.SzerokośćOkna, _dane.WysokośćOkna), _dane.ŚrednicaPiłki); // Utwórz nowy obiekt typu SimulationManager z oknem i średnicą piłki dostarczanymi przez obiekt danych.
-        _obserwatorzy = new HashSet<IObserver<IEnumerable<Ball>>>(); // Zainicjuj zbiór obserwatorów.
-    }
+        private ISet<IObserver<IEnumerable<Ball>>> _observers;
+        private AbstractDataApi _data;
+        private ManageSimulation _manageSimulation;
+        private bool _isWorking = false;
 
+        public SimulationController(AbstractDataApi? data = default)
+        {
+            _data = data ?? AbstractDataApi.CreateInstance();
+            _manageSimulation = new ManageSimulation(new Window(_data.WidthWindow, _data.HeightWindow), _data.BallRadius);
+            _observers = new HashSet<IObserver<IEnumerable<Ball>>>();
+        }
+        public override void SpawnBalls(int numberOfBalls)
+        {
+            _simulationManager.RandomizedBallSpawning(numberOfBalls); // Spawn a number of balls randomly in the simulation.
+        }
+
+        internal override IEnumerable<Ball> Balls => _manageSimulation.Balls;
+
+        public override void Start()
+        {
+            if (!_isWorking)
+            {
+                _isWorking = true;
+                Task.Run(Simulation);
+            }
+        }
+
+        public override void Stop()
+        {
+            _isWorking = false;
+        }
+
+        public override IDisposable Subscribe(IObserver<IEnumerable<IBall>> observer)
+        {
+            _observers.Add(observer);
+            return new SubscriptionController(_observers, observer);
+        }
+
+        public override void Simulation()
+        {
+            while (_isWorking)
+            {
+                _manageSimulation.ballsForce();
+                BallTracker(Balls);
+                Thread.Sleep(10); // Using Task.Delay instead of Thread.Sleep to avoid blocking the thread.
+            }
+        }
+
+        private void BallTracker(IEnumerable<Ball> balls)
+        {
+            foreach (var ball in balls)
+            {
+                foreach (var observer in _observers)
+                {
+                    observer.OnNext(new List<Ball> { ball });
+                }
+            }
+        }
+
+        private class SubscriptionController : IDisposable
+        {
+            private readonly ISet<IObserver<IEnumerable<Ball>>> _observers;
+            private readonly IObserver<IEnumerable<Ball>> _observer;
+
+            public SubscriptionController(ISet<IObserver<IEnumerable<Ball>>> observers, IObserver<IEnumerable<Ball>> observer)
+            {
+                _observers = observers;
+                _observer = observer;
+            }
+
+            public void Dispose()
+            {
+                _observers.Remove(_observer);
+            }
+        }
+    }
 }
