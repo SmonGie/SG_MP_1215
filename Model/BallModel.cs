@@ -12,18 +12,18 @@ namespace Model
     internal class BallModel : IBallModel
     {
         private IBall _ball; // Private field to store the Ball object.
-        private Vector _velocity => _ball.Velocity;
-        private Vector _position => CalcOffsetPosition(_ball.Position);
+        private Vector2 _velocity => _ball.Velocity;
+        private Vector2 _position => CalcOffsetPosition(_ball.Position);
         private int _radius => _ball.Radius;
         private int _diameter => _ball.Diameter;
 
         #region IBallModel
-        public Vector Velocity
+        public Vector2 Velocity
         {
             get { return _velocity; }
         }
 
-        public Vector Position
+        public Vector2 Position
         {
             get { return _position; }
         }
@@ -46,9 +46,9 @@ namespace Model
         }
 
         // Private method that calculates the offset position of the Ball based on its radius.
-        private Vector CalcOffsetPosition(Vector position)
+        private Vector2 CalcOffsetPosition(Vector2 position)
         {
-            return new Vector(position.X - Radius, position.Y - Radius);
+            return new Vector2(position.X - Radius, position.Y - Radius);
         }
 
     }

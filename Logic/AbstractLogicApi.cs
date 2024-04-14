@@ -23,10 +23,10 @@ namespace Logic
         }
         public interface IBall
         {
-            Vector2 velocity { get; }
-            Vector2 position { get; }
-            int radius { get; }
-            int diameter { get; }
+            Vector2 Velocity { get; }
+            Vector2 Position { get; }
+            int Radius { get; }
+            int Diameter { get; }
         }
     }
 }

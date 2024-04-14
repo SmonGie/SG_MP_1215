@@ -4,14 +4,12 @@ using System.Linq;
 using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
-
 using Logic;
-
 
 namespace Model
 {
     // Klasa abstrakcyjna implementująca interfejsy IObserver oraz IObservable z parametrami generycznymi.
-    public abstract class AbstractModelAPI : IObserver<IEnumerable<IBall>>, IObservable<IEnumerable<IBallModel>>
+    public abstract class AbstractModelApi : IObserver<IEnumerable<IBall>>, IObservable<IEnumerable<IBallModel>>
     {
         // Metody abstrakcyjne, które muszą zostać zaimplementowane przez klasy dziedziczące:
         public abstract void SpawnBalls(int numberOfBalls);
@@ -29,9 +27,9 @@ namespace Model
         public abstract IDisposable Subscribe(IObserver<IEnumerable<IBallModel>> observer);
 
         // Metoda statyczna tworząca instancję klasy Model, przekazująca instancję logiki, jeśli jest dostępna.
-        public static AbstractModelAPI CreateInstance(AbstractLogicAPI? logic = default)
+        public static AbstractModelApi CreateInstance(AbstractLogicApi? logic = default)
         {
-            return new Model(logic ?? AbstractLogicAPI.CreateInstance());
+            return new Model(logic ?? AbstractLogicApi.CreateInstance());
         }
     }
 

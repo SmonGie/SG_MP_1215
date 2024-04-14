@@ -7,6 +7,7 @@ using System.Numerics;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
+using static Logic.AbstractLogicApi;
 
 namespace Logic
 {
@@ -18,6 +19,8 @@ namespace Logic
         {
             this.velocity=velocity;
             this.position=position;
+            this.diameter=diameter;
+            this.radius = diameter/2 ;
 
 
         }
@@ -26,8 +29,33 @@ namespace Logic
         private int diameter;
         private int radius;
 
+        #region IBall
+        public Vector2 Velocity
+        {
+            get { return this.velocity; }
+            private set { this.velocity = value; }
+        }
 
-    private Random Random = new Random();
+        public Vector2 Position
+        {
+            get { return this.position; }
+            private set { this.position = value; }
+        }
+
+        public int Radius
+        {
+            get { return this.radius; }
+            private set { this.radius = value; }
+        }
+
+        public int Diameter
+        {
+            get { return this.diameter; }
+            private set { this.diameter = value; }
+        }
+        #endregion
+
+        private Random Random = new Random();
 
 
         public void Move(Vector2 xBorder, Vector2 yBorder ,float force = 0.5f)
@@ -61,32 +89,6 @@ namespace Logic
                 && Position == other.Position
                 && Diameter == other.Diameter;
         }
-
-        #region IBall
-        public Vector2 Velocity
-        {
-            get { return Velocity; }
-            private set { Velocity = value; }
-        }
-
-        public Vector2 Position
-        {
-            get { return Position; }
-            private set { Position = value; }
-        }
-
-        public int Radius
-        {
-            get { return Radius; }
-            private set { Radius = value; }
-        }
-
-        public int Diameter
-        {
-            get { return Diameter; }
-            private set { Diameter = value; }
-        }
-        #endregion
     }
 
     public static class Boundry
