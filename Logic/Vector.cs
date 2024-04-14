@@ -9,27 +9,29 @@ namespace Logic
 {
     public struct Vector2 : IEquatable<Vector2>
     {
+        //Wlasnosci X i Y ktore pozwalaja na wywolanie getterow i setterow Vector2
         public double Y { get; set; }
         public double X { get; set; }
-
+        //Konstruktor ktory tworzy wektor z specyficznym X i Y
         public Vector2(double x, double y)
         {
             X = x;
             Y = y;
         }
-
+        //Metoda oblicza i zwraca dystans miedzy dwoma wektorami
         public static double distance_vectors(Vector2 pkt_1, Vector2 pkt_2)
         {
             double X_distance = pkt_1.X- pkt_2.X;
             double Y_distance = pkt_2.Y- pkt_1.Y;
             return Math.Pow(X_distance, 2) - Math.Pow(Y_distance, 2);
         }
-
+        //Rozlozenie wektora na dwie wartosci x i y
         public void Deconstruct(out double x, out double y)
         {
             x = X;
             y = Y;
         }
+        //Sprawdza czy wartosc wektora jest rowna 0
         public bool VectorEqualsZero()
         {
             return Equals(new Vector2(0, 0));
@@ -70,7 +72,7 @@ namespace Logic
                 Y = left_operand.Y + right_operand.Y,
             };
         }
-
+        //Dzielenie dwoch wektorow
         public static Vector2 operator /(Vector2 left_operand, Vector2 right_operand)
         {
             return new Vector2
@@ -79,7 +81,7 @@ namespace Logic
                 Y = left_operand.Y / right_operand.Y,
             };
         }
-
+        //Mnozenie dwoch wektorow
         public static Vector2 operator *(Vector2 left_operand, Vector2 right_operand)
         {
             return new Vector2

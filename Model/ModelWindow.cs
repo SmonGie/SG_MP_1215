@@ -10,11 +10,11 @@ namespace Model
     public class ModelWindow
     {
 
-        private Window _window; // A reference to a Window object
-        public int Width => _window.Width; // Property to get the width of the Window
-        public int Height => _window.Height; // Property to get the height of the Window
+        private Window _window; // referencja do obiektu window
+        public int Width => _window.Width; // wlasnosc do dostania szerokosci okna
+        public int Height => _window.Height; // wlasnosc do dostania wysokosci okna
 
-        // Constructor that creates a WindowModel with a reference to a Window object
+        // konstruktor ktory tworzy ModelWindow przy pomocy referencji do obiektu typu window
         public ModelWindow(Window window)
         {
             _window = window;

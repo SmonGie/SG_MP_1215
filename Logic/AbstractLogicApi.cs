@@ -8,17 +8,20 @@ using System.Threading.Tasks;
 
 namespace Logic
 {
+    //Zdefiniuj klase AbstractLogicApi jako publiczna i zaimplementuj interfejs IObservable dla IEnumerable obiektow typu Ball
     public abstract class AbstractLogicApi : IObservable<IEnumerable<IBall>>
     {
-        internal abstract IEnumerable<Ball> Balls { get; }
+        //Zdefiniuj abstrakcyjna wartosc dla IEnumerable obiektow typu Ball
+        internal abstract IEnumerable<Ball> Balls { get; }  //Definicje abstraktyjnych metod
         public abstract void Simulation();
         public abstract void Start();
         public abstract void Stop();
         public abstract void SpawnBalls(int ballNumber);
         public abstract IDisposable Subscribe(IObserver<IEnumerable<IBall>> observer);
+        //Definicja metody statycznej ktora tworzy instancje klasy AbstractLogicApi, z opcjonalnymi parametrami
         public static AbstractLogicApi CreateInstance(AbstractDataApi? data = default)
         {
-            // Return a new instance of the SimulationController class, passing in the provided AbstractDataAPI instance or creating a new instance of AbstractDataAPI if no instance is provided.
+            //zwroc nowa instancje klasy SimulationController przekazywanej przez instancje AbstractDataApi albo stworz nowa jesli nie jest zapewniona
             return new SimulationController(data ?? AbstractDataApi.CreateInstance());
         }
     }

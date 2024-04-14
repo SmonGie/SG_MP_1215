@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 
 namespace Logic
 {
+    //klasa Window z określoną szerokością i wysokością
     public class Window
     {
         public int Width { get; init; }

@@ -11,7 +11,7 @@ namespace Model
 {
     internal class BallModel : IBallModel
     {
-        private IBall _ball; // Private field to store the Ball object.
+        private IBall _ball; // Prywatne pola do przechowywania wartosci obiektu
         private Vector2 _velocity => _ball.Velocity;
         private Vector2 _position => CalcOffsetPosition(_ball.Position);
         private int _radius => _ball.Radius;
@@ -39,13 +39,13 @@ namespace Model
         }
         #endregion
 
-        // Constructor that takes a Ball object and initializes the private field.
+        // konstuktor ktory bierze obiekt i inicjalizuje prywatne wartosci
         public BallModel(IBall ball)
         {
             _ball = ball;
         }
 
-        // Private method that calculates the offset position of the Ball based on its radius.
+        // prywatna metoda ktora kalkuluje pozycje offset kuli na podstawie promienia
         private Vector2 CalcOffsetPosition(Vector2 position)
         {
             return new Vector2(position.X - Radius, position.Y - Radius);

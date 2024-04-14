@@ -6,13 +6,13 @@ using System.Threading.Tasks;
 
 namespace ViewModel
 {
-    // This class represents the main ViewModel for the application.
+    // Ta klasa reprezentuje główny ViewModel aplikacji.
     public class MainViewModel : ViewModel
     {
-        // This property represents the current ViewModel that is displayed in the UI.
+        // Ta właściwość reprezentuje bieżący ViewModel wyświetlany w interfejsie użytkownika.
         public ViewModel ViewModel { get; }
 
-        // This constructor initializes the ViewModel property with a new instance of the SimulationViewModel class.
+        // Ten konstruktor inicjuje właściwość ViewModel nową instancją klasy SimViewModel.
         public MainViewModel() : base()
         {
             ViewModel = new SimViewModel();

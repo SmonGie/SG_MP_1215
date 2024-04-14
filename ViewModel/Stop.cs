@@ -14,26 +14,26 @@ namespace ViewModel
         public Stop(SimViewModel simViewModel) : base()
         {
             _simViewModel = simViewModel;
-            // Subscribe to the PropertyChanged event of the SimulationViewModel instance
+            // Subskrybuj zdarzenie PropertyChanged instancji SimulationViewModel
             _simViewModel.PropertyChanged += OnSimulationViewModelPropertyChanged;
         }
 
         public override bool CanExecute(object? parameter)
         {
-            // Check if the base CanExecute method returns true and the simulation is currently running
+            // Sprawdź, czy podstawowa metoda CanExecute zwraca wartość true i czy symulacja jest aktualnie uruchomiona
             return base.CanExecute(parameter)
                 && _simViewModel.IsWorking;
         }
 
         public override void Execute(object? parameter)
         {
-            // Call the StopSimulation method of the SimulationViewModel instance
+            // Wywołaj metodę StopSim instancji SimViewModel
             _simViewModel.StopSim();
         }
 
         private void OnSimulationViewModelPropertyChanged(object? sender, PropertyChangedEventArgs e)
         {
-            // If the IsSimulationRunning property of the SimulationViewModel instance changes, call the OnExecuteChange method
+            // Jeśli własnosc IsWorking instancji SimViewModel ulegnie zmianie, wywołaj metodę OnExecuteChange
             if (e.PropertyName == nameof(_simViewModel.IsWorking))
             {
                 OnExecuteChange();

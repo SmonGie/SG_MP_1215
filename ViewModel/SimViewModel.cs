@@ -9,6 +9,8 @@ using Model;
 
 namespace ViewModel
 {
+    // Ta klasa reprezentuje ViewModel dla widoku symulacji.
+    // Implementuje interfejs IObserver do otrzymywania powiadomień od Modelu, gdy zmienia się kolekcja obiektów BallModel.
     internal class SimViewModel : ViewModel, IObserver<IEnumerable<IBallModel>>
     {
         private IDisposable? _unsubscriber;
@@ -18,7 +20,7 @@ namespace ViewModel
         private bool _isWorking = false;
 
 
-        
+        // Ta własnosc zwraca kolekcję obiektów BallModel, które są aktualnie wyświetlane w interfejsie użytkownika.
         public IEnumerable<IBallModel> Balls { get { return _balls; } }
 
        
@@ -27,38 +29,38 @@ namespace ViewModel
 
         public SimViewModel(AbstractModelApi? model = default) : base()
         {
-            // If no AbstractModelAPI object is provided, create a new one using the CreateInstance method.
+            // Jeśli nie podano obiektu AbstractModelApi, utwórz nowy za pomocą metody CreateInstance.
             _logic = model ?? AbstractModelApi.CreateInstance();
             _balls = new ObservableCollection<IBallModel>();
 
-            // Initialize the Start and Stop commands with new instances of the respective input classes.
+            // Zainicjuj polecenia Start i Stop nowymi instancjami odpowiednich klas wejściowych.
             Start = new Start(this);
             Stop = new Stop(this);
 
-            // Subscribe to notifications from the Model.
+            //Zaubskrybuj powiadomienia od Model.
             Subscriber(_logic);
         }
-        // This property represents the number of BallModel objects that should be created when the simulation is started.
+        // Ta właściwość reprezentuje liczbę obiektów BallModel, które powinny zostać utworzone po rozpoczęciu symulacji.
         public int NumberofBalls
         {
             get => _numberofBalls;
             set { SetField(ref _numberofBalls, value); }
         }
-
+        //Ta metoda sprawdz czy symulacja dziala
         public bool IsWorking
         {
             get { return _isWorking; }
             private set { SetField(ref _isWorking, value); }
         }
 
-        // This method starts the simulation.
+        //Ta metoda zaczyna symulacje
         public void StartSim()
         {
             IsWorking = true;
             _logic.SpawnBalls(NumberofBalls);
             _logic.Start();
         }
-
+        //Ta metoda zatrzymuje symulacje
         public void StopSim()
         {
             IsWorking = false;

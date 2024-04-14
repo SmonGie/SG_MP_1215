@@ -7,42 +7,42 @@ using Logic;
 
 namespace Model
 {
-    // This class represents a concrete implementation of AbstractModelAPI and provides the functionality of 
-    // tracking and simulating balls. It acts as both an observer of a provider of balls and an observable 
-    // provider of BallModels to its observers.
+    // Ta klasa reprezentuje konkretną implementację AbstractModelAPI i zapewnia funkcjonalność
+    // śledzenie i symulowanie kuler. Spełnia rolę zarówno obserwatora dostarczającego kule, jak i obserwatora
+    // dostawca BallModels dla swoich obserwatorów.
     internal class Model : AbstractModelApi
     {
-        private AbstractLogicApi _logic;  // A reference to an instance of AbstractLogicAPI for the Model to use
-        private ISet<IObserver<IEnumerable<IBallModel>>> _observers; // A set of observers that are tracking the BallModels 
-        private IDisposable? _unsubscriber; // An object that represents the subscription between the Model and the Observable
+        private AbstractLogicApi _logic;  // referencja do instancji AbstractLogicApi
+        private ISet<IObserver<IEnumerable<IBallModel>>> _observers; // Zestaw obserwatorów śledzących BallModels
+        private IDisposable? _unsubscriber; // Obiekt reprezentujący subskrypcję między Modelem a Observable
 
-        // Constructor that creates an instance of Model with a reference to an AbstractLogicAPI object
+        // Konstruktor tworzący instancję Modelu z referencją do obiektu AbstractLogicApi
         public Model(AbstractLogicApi? logic = default)
         {
-            _logic = logic ?? AbstractLogicApi.CreateInstance(); // If logic is null, create a new instance of AbstractLogicAPI
-            _observers = new HashSet<IObserver<IEnumerable<IBallModel>>>(); // Create an empty hashset of observers 
-            Subscribe(_logic); // Subscribe the Model to the Observable
+            _logic = logic ?? AbstractLogicApi.CreateInstance(); // Jeśli logic ma wartość null, utwórz nową instancję AbstractLogicAPI
+            _observers = new HashSet<IObserver<IEnumerable<IBallModel>>>(); //Utwórz pusty zestaw hash obserwatorów 
+            Subscribe(_logic); // zasubsrybuj model do observable
         }
 
-        // Method to spawn balls using the AbstractLogicAPI object
+        // Metoda to tworzenia kul przy pomocy obiektu AbstractLogicApi
         public override void SpawnBalls(int numberOfBalls)
         {
             _logic.SpawnBalls(numberOfBalls);
         }
 
-        // Method to start the simulation using the AbstractLogicAPI object
+        // Metoda do tworzenia symulacji przy pomocy przy pomocy obiektu AbstractLogicApi
         public override void Start()
         {
             _logic.Start();
         }
 
-        // Method to stop the simulation using the AbstractLogicAPI object
+        // Metoda do zatrzymywania symulacji przy pomocy obiektu AbstractLogicApi
         public override void Stop()
         {
             _logic.Stop();
         }
 
-        // Method to convert a collection of Ball objects to BallModel objects
+        // Metoda do przekonwertowania obiektow Ball do obiektow BallModel 
         public static IEnumerable<IBallModel> BallToBallModel(IEnumerable<IBall> balls)
         {
             return balls.Select(ball => new BallModel(ball));

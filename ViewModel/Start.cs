@@ -11,33 +11,34 @@ namespace ViewModel
     {
         private SimViewModel _simViewModel;
 
-        // Constructor that takes a SimulationViewModel instance as a parameter.
+        // Konstruktor pobierający jako parametr instancję SimulationViewModel.
+
         public Start(SimViewModel simViewModel) : base()
         {
             _simViewModel = simViewModel;
             _simViewModel.PropertyChanged += OnSimulationViewModelPropertyChanged;
         }
 
-        // Implementation of the CanExecute method of the ICommand interface.
-        // Checks if the command can be executed.
-        // Returns true if the base implementation of CanExecute returns true and the simulation is not already running.
+        // Implementacja metody CanExecute interfejsu ICommand.
+        // Sprawdza, czy polecenie może zostać wykonane.
+        // Zwraca wartość true, jeśli podstawowa implementacja CanExecute zwraca wartość true, a symulacja jeszcze nie jest uruchomiona.
         public override bool CanExecute(object? parameter)
         {
             return base.CanExecute(parameter)
                 && !_simViewModel.IsWorking;
         }
 
-        // Implementation of the Execute method of the ICommand interface.
-        // Executes the command.
-        // Calls the StartSimulation method of the SimulationViewModel instance passed to the constructor.
+        // Implementacja metody Execute interfejsu ICommand.
+        // Wykonuje polecenie.
+        // Wywołuje metodę StartSim instancji SimViewModel przekazanej do konstruktora.
         public override void Execute(object? parameter)
         {
             _simViewModel.StartSim();
         }
 
-        // Event handler for the PropertyChanged event of the SimulationViewModel instance.
-        // Checks if the IsSimulationRunning property changed.
-        // Calls the OnExecuteChange method to indicate that the CanExecute method needs to be reevaluated.
+        // Procedura obsługi zdarzenia PropertyChanged instancji SimViewModel.
+        // Sprawdza, czy właściwość IsWorking uległa zmianie.
+        // Wywołuje metodę OnExecuteChange, aby wskazać, że metoda CanExecute wymaga ponownej oceny.
         private void OnSimulationViewModelPropertyChanged(object? sender, PropertyChangedEventArgs e)
         {
             if (e.PropertyName == nameof(_simViewModel.IsWorking))
