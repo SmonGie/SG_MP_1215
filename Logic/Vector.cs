@@ -39,12 +39,12 @@ namespace Logic
         // Sprawdza, czy instancja Vector jest równa innemu obiektowi
         public override bool Equals(object? obj)
         {
-            return obj is Vector vector
+            return obj is Vector2 vector
                 && Equals(vector);
         }
 
         // Sprawdza, czy instancja Vector jest równa innemu instancji Vector
-        public bool Equals(Vector other)
+        public bool Equals(Vector2 other)
         {
             double xDiff = X - other.X;
             double yDiff = Y - other.Y;

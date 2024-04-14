@@ -21,7 +21,7 @@ namespace Logic
         }
         public override void SpawnBalls(int numberOfBalls)
         {
-            _simulationManager.RandomizedBallSpawning(numberOfBalls); // Spawn a number of balls randomly in the simulation.
+            _manageSimulation.RandomBallSpawnPosision(numberOfBalls); // Spawn a number of balls randomly in the simulation.
         }
 
         internal override IEnumerable<Ball> Balls => _manageSimulation.Balls;
@@ -58,19 +58,16 @@ namespace Logic
 
         private void BallTracker(IEnumerable<Ball> balls)
         {
-            foreach (var ball in balls)
+            foreach (var observer in _observers)
             {
-                foreach (var observer in _observers)
-                {
-                    observer.OnNext(new List<Ball> { ball });
-                }
+                observer.OnNext(Balls);
             }
         }
 
         private class SubscriptionController : IDisposable
         {
             private readonly ISet<IObserver<IEnumerable<Ball>>> _observers;
-            private readonly IObserver<IEnumerable<Ball>> _observer;
+            private readonly IObserver<IEnumerable< Ball>> _observer;
 
             public SubscriptionController(ISet<IObserver<IEnumerable<Ball>>> observers, IObserver<IEnumerable<Ball>> observer)
             {
