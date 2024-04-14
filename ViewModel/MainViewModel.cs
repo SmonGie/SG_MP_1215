@@ -15,7 +15,7 @@ namespace ViewModel
         // This constructor initializes the ViewModel property with a new instance of the SimulationViewModel class.
         public MainViewModel() : base()
         {
-            ViewModel = new SimulationViewModel();
+            ViewModel = new SimViewModel();
         }
     }
 }

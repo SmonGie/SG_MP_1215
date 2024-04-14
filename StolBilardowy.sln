@@ -16,6 +16,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ViewModel", "ViewModel\View
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "View", "View\View.csproj", "{CD98AD8C-B28C-4E9D-8134-F7DC136D20E1}"
+	ProjectSection(ProjectDependencies) = postProject
+		{F2E60E6B-A7BD-4C4E-AFA8-03170E979EE0} = {F2E60E6B-A7BD-4C4E-AFA8-03170E979EE0}
+	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Model", "Model\Model.csproj", "{77B60366-4D97-45D4-9FAA-26258D9EF3D5}"
 	ProjectSection(ProjectDependencies) = postProject

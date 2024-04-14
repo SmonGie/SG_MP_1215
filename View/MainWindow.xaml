@@ -1,0 +1,13 @@
+﻿<Window x:Class="View.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:views="clr-namespace:View"
+        mc:Ignorable="d"
+        Title="Billard Table" 
+        ResizeMode="NoResize" Height="646" Width="928">
+    <Grid Background="White" Height="330" VerticalAlignment="Bottom" HorizontalAlignment="Right" Width="663" Margin="0 ,0,235,100">
+        <views:SimWindow DataContext="{Binding ViewModel}" Margin="34,-155,-171,-13" Loaded="SimWindow_Loaded"/>
+    </Grid>
+</Window>
