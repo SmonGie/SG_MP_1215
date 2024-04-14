@@ -1,13 +1,12 @@
 ﻿using System.Windows.Controls;
+using System.Windows;
+using Logic;
 
 namespace View
 {
-    /// <summary>
-    /// Logika interakcji dla klasy SimulationWindow.xaml
-    /// </summary>
-    public partial class SimulationWindow : UserControl
+    public partial class SimWindow : System.Windows.Controls.UserControl
     {
-        public SimulationWindow() : base()
+        public SimWindow() : base()
         {
             InitializeComponent();
         }
