@@ -18,7 +18,7 @@
                 TextAlignment="Center"
                 VerticalContentAlignment="Center"
                 Tag="Amount"
-                Text="{Binding numberofBalls}" Canvas.Left="300" Canvas.Top="530"/>
+                Text="{Binding NumberofBalls}" Canvas.Left="300" Canvas.Top="530"/>
         <Button
                 Command="{Binding Start}"
                 Content="Start"
