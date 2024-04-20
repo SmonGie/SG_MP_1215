@@ -1,15 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using System.Net.NetworkInformation;
-using System.Numerics;
-using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
-using static Logic.AbstractLogicApi;
-
-namespace Logic
+﻿namespace Logic
 {
     //Zdefiniuj klase Ball jako publiczna i zaimplementuj interfejs IEquatable dla klasy Ball
     internal class Ball : IBall, IEquatable<Ball>

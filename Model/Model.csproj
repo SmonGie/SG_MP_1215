@@ -7,7 +7,14 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Logic\Logic.csproj" />
+    <PackageReference Include="Moq" Version="4.20.70" />
   </ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\Logic\Logic.csproj" />
+		<AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleTo">
+			<_Parameter1>StółBilardowyTest</_Parameter1>
+		</AssemblyAttribute>
+	</ItemGroup>
 
 </Project>
