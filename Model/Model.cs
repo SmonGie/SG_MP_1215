@@ -44,44 +44,44 @@ namespace Model
         }
 
         #region Observer
-        // Method to subscribe the Model to an IObservable<IEnumerable<Ball>> object
+        
         public void Subscribe(IObservable<IEnumerable<IBall>> provider)
         {
-            _unsubscriber = provider.Subscribe(this); // Subscribe the Model to the provider
+            _unsubscriber = provider.Subscribe(this);
         }
 
-        // Method called when the Observable is completed
+        
         public override void OnCompleted()
         {
-            _unsubscriber?.Dispose(); // Dispose the subscription object
+            _unsubscriber?.Dispose(); 
         }
 
-        // Method called when the Observable encounters an error
+       
         public override void OnError(Exception error)
         {
             throw error;
         }
 
-        // Method called when the Observable sends a collection of Ball objects
+        
         public override void OnNext(IEnumerable<IBall> balls)
         {
-            TrackBalls(BallToBallModel(balls)); // Convert the Ball objects to BallModel objects and track them
+            TrackBalls(BallToBallModel(balls)); 
         }
         #endregion
 
         #region Provider
-        // Method to subscribe an IObserver<IEnumerable<BallModel>> object to the Model
+        
         public override IDisposable Subscribe(IObserver<IEnumerable<IBallModel>> observer)
         {
             if (!_observers.Contains(observer))
             {
-                _observers.Add(observer); // Add the observer to the set of observers
+                _observers.Add(observer);
             }
 
-            return new SubscriptionController(_observers, observer); // Return a SubscriptionController object that represents the subscription
+            return new SubscriptionController(_observers, observer); 
         }
 
-        // Class that controls the subscription between the Model and its observers
+       
         private class SubscriptionController : IDisposable
         {
             private ISet<IObserver<IEnumerable<IBallModel>>> _observers;
@@ -105,15 +105,15 @@ namespace Model
 
         public void TrackBalls(IEnumerable<IBallModel> balls)
         {
-            // Iterate through all subscribed observers
+            
             foreach (var observer in _observers)
             {
-                // If the collection of balls is null, throw an exception
+                
                 if (balls is null)
                 {
                     observer.OnError(new NullReferenceException("Ball is null!"));
                 }
-                // Otherwise, call the observer's OnNext method with the collection of balls
+                
                 else
                 {
                     observer.OnNext(balls);
@@ -123,17 +123,17 @@ namespace Model
 
         public void CompleteTracking()
         {
-            // Iterate through all subscribed observers
+            
             foreach (var observer in _observers)
             {
-                // If the current observer is in the set of observers, call its OnCompleted method
+                
                 if (_observers.Contains(observer))
                 {
                     observer.OnCompleted();
                 }
             }
 
-            // Clear the set of observers
+            
             _observers.Clear();
         }
 

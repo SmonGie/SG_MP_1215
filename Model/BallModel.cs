@@ -7,7 +7,7 @@ namespace Model
     {
         private IBall _ball; // Prywatne pola do przechowywania wartosci obiektu
         private Vector2 _velocity => _ball.Velocity;
-        private Vector2 _position => CalcOffsetPosition(_ball.Position);
+        private Vector2 _position => Offset(_ball.Position);
         private int _radius => _ball.Radius;
         private int _diameter => _ball.Diameter;
 
@@ -40,7 +40,7 @@ namespace Model
         }
 
         // prywatna metoda ktora kalkuluje pozycje offset kuli na podstawie promienia
-        private Vector2 CalcOffsetPosition(Vector2 position)
+        private Vector2 Offset(Vector2 position)
         {
             return new Vector2(position.X - Radius, position.Y - Radius);
         }
