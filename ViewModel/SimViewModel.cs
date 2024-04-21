@@ -63,33 +63,30 @@ namespace ViewModel
         }
 
         #region Observer
-        // This method is called when the ViewModel is subscribed to the Model's notifications.
+
         public void Subscriber(IObservable<IEnumerable<IBallModel>> provider)
         {
             _unsubscriber = provider.Subscribe(this);
         }
 
-        // This method is called when the Model has finished sending notifications.
         public void OnCompleted()
         {
             _unsubscriber?.Dispose();
         }
 
-        // This method is called when an error occurs while the Model is sending notifications.
+        
         public void OnError(Exception error)
         {
             throw error;
         }
 
-        // This method is called when the collection of BallModel objects in the Model changes.
+  
         public void OnNext(IEnumerable<IBallModel> balls)
         {
             if (balls is null)
             {
                 balls = new List<IBallModel>();
             }
-
-            // Update the collection of BallModel objects in the ViewModel and notify the UI that the Balls property has changed.
             _balls = new ObservableCollection<IBallModel>(balls);
             OnPropertyChanged(nameof(Balls));
         }

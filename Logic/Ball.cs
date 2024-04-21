@@ -49,11 +49,8 @@
         #endregion
         //zainicjuj generator losowosci
         private Random Random = new Random();
-        //nadpisz metode GetHashCode aby zwracala wartosci hash dla obiektu typu Ball
-        public override int GetHashCode()
-        {
-            return HashCode.Combine(Velocity, Position, Diameter);
-        }
+        
+        
         //Zdefiniuj metode dla poruszania sie ze specyficznymi wartosciami granic x i y
         public void Move(Vector2 xBorder, Vector2 yBorder ,float force = 1f)
         {
@@ -95,9 +92,5 @@
             return (value - padding >= min) && (value + padding <= max);
         }
 
-        public static bool CheckBoundry(this int value, int min, int max)
-        {
-            return (value >= min) && (value <= max);
-        }
     }
 }
