@@ -100,6 +100,8 @@ namespace Tests
         private const int testWidth = 100;
         private const int testHeight = 100;
         private SimulationController ballManager;
+        private Mock<AbstractLogicApi> logicApiMock;
+
 
         [SetUp]
         public void Setup()
