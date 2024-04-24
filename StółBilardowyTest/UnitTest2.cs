@@ -18,39 +18,77 @@ namespace Tests
         [Test]
         public void ConstructorTest()
         {
-            Vector2 velocity = new Vector2(testVelocityX, testVelocityY);
-            Vector2 position = new Vector2(testPositionX, testPositionY);
+           
 
-            testBall = new Ball(velocity, position, testDiameter);
+            // Tworzenie mocka dla AbstractLogicApi
+            var logicApiMock = new Mock<AbstractLogicApi>();
 
+            // Określenie zachowania mocka dla metody Balls
+            logicApiMock.SetupGet(api => api.Balls).Returns(new List<Ball>
+    {
+        new Ball(new Vector2(testVelocityX, testVelocityY), new Vector2(testPositionX, testPositionY), testDiameter)
+    });
+
+            // Pobranie pierwszej kuli z mocka AbstractLogicApi
+            testBall = logicApiMock.Object.Balls.First();
+
+            // Sprawdzenie, czy testBall nie jest null
             Assert.IsNotNull(testBall);
+
+            // Sprawdzenie, czy testBall posiada odpowiednie właściwości
             Assert.AreEqual(testVelocityX, testBall.Velocity.X);
             Assert.AreEqual(testVelocityY, testBall.Velocity.Y);
             Assert.AreEqual(testPositionX, testBall.Position.X);
             Assert.AreEqual(testPositionY, testBall.Position.Y);
             Assert.AreEqual(testDiameter, testBall.Diameter);
             Assert.AreEqual(testDiameter / 2, testBall.Radius);
+
         }
 
         [Test]
         public void ConstructorRadiusAndDiameterTest()
         {
-            Vector2 velocity = new Vector2(testVelocityX, testVelocityY);
-            Vector2 position = new Vector2(testPositionX, testPositionY);
-            Ball testBall = new Ball(velocity, position, testDiameter);
+            // Tworzenie mocka dla AbstractLogicApi
+            var logicApiMock = new Mock<AbstractLogicApi>();
 
+            // Określenie zachowania mocka dla metody Balls
+            logicApiMock.SetupGet(api => api.Balls).Returns(new List<Ball>
+    {
+        new Ball(new Vector2(testVelocityX, testVelocityY), new Vector2(testPositionX, testPositionY), testDiameter)
+    });
+
+            // Pobranie pierwszej kuli z mocka AbstractLogicApi
+            var testBall = logicApiMock.Object.Balls.First();
+
+            // Sprawdzenie, czy testBall nie jest null
+            Assert.IsNotNull(testBall);
+
+            // Sprawdzenie, czy promień kuli jest poprawnie obliczony
             Assert.AreEqual(testDiameter / 2, testBall.Radius);
+
+            // Sprawdzenie, czy średnica kuli jest ustawiona poprawnie
             Assert.AreEqual(testDiameter, testBall.Diameter);
         }
 
         [Test]
         public void EqualsTest()
         {
-            Vector2 velocity = new Vector2(testVelocityX, testVelocityY);
-            Vector2 position = new Vector2(testPositionX, testPositionY);
-            Ball testBall1 = new Ball(velocity, position, testDiameter);
-            Ball testBall2 = new Ball(velocity, position, testDiameter);
+            // Tworzenie mocka dla AbstractLogicApi
+            var logicApiMock = new Mock<AbstractLogicApi>();
 
+            // Określenie zachowania mocka dla metody Balls
+            logicApiMock.SetupGet(api => api.Balls).Returns(new List<Ball>
+    {
+        new Ball(new Vector2(testVelocityX, testVelocityY), new Vector2(testPositionX, testPositionY), testDiameter)
+    });
+
+            // Pobranie pierwszej kuli z mocka AbstractLogicApi
+            var testBall1 = logicApiMock.Object.Balls.First();
+
+            // Tworzenie drugiej kuli, która będzie miała takie same wartości jak pierwsza
+            var testBall2 = new Ball(new Vector2(testVelocityX, testVelocityY), new Vector2(testPositionX, testPositionY), testDiameter);
+
+            // Porównanie obiektów Ball
             Assert.AreEqual(testBall1, testBall2);
         }
     }
