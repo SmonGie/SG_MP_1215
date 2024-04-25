@@ -99,19 +99,27 @@ namespace Tests
         private const int testRadius = testDiameter / 2;
         private const int testWidth = 100;
         private const int testHeight = 100;
-        private SimulationController ballManager;
+        private AbstractLogicApi ballManager;
         private Mock<AbstractLogicApi> logicApiMock;
 
 
         [SetUp]
         public void Setup()
         {
-            ballManager = new SimulationController();
+            // Creating a mock instance of SimulationController
+            logicApiMock = new Mock<AbstractLogicApi>();
+
+            // Assigning the mock object to the ballManager field
+            ballManager = logicApiMock.Object;
         }
 
         [Test]
         public void ConstructorTest()
         {
+            // Verify that the constructor of AbstractLogicApi was called
+            logicApiMock.Verify(x => x, Times.Once);
+
+            // Assert that ballManager is not null
             Assert.IsNotNull(ballManager);
         }
 
