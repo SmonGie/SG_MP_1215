@@ -2,7 +2,6 @@
 using Moq;
 using System.Collections.Generic;
 using Logic;
-using Data;
 
 namespace Tests
 {
