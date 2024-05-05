@@ -43,16 +43,22 @@
 
         public IList<Ball> RandomBallSpawnPosition(int ballNumber) 
         {
-            Balls = new List<Ball>(ballNumber); //Stworz liste o wielkosci rownej ballNumber
-
-            for(int i = 0; i < ballNumber; i++)
+            Balls.Clear();
+            for (int i = 0; i < ballNumber; i++)
             {
-                Vector2 position = RandomBallPosition(); // Wygeneruj losowo pozycje
-                Vector2 velocity = RandomBallVelocity(); // Wygeneuj losowa predkosc
-
-                Balls.Add(new Ball(velocity, position, Diameter)); //stworz kule o wylosowanych parametrach
+                try
+                {
+                    Vector2 position = RandomBallPosition();
+                    Vector2 velocity = RandomBallVelocity();
+                    Balls.Add(new Ball(velocity, position, Diameter));
+                }
+                catch (Exception ex)
+                {
+                    // Obsługa błędów związanych z generowaniem pozycji i prędkości kuli
+                    Console.WriteLine($"Error generating ball: {ex.Message}");
+                }
             }
-            return Balls; //zwroc liste kul
+            return Balls;
         }
     }
 }

@@ -20,9 +20,7 @@ namespace ViewModel
 
         // Ta metoda wywołuje zdarzenie CanExecuteChanged, aby powiadomić element interfejsu użytkownika o zmianie możliwości wykonania polecenia.
         // Jest wywoływane przez klasy pochodne, gdy stan polecenia zmienia się w sposób wpływający na jego możliwość wykonania.
-        protected void OnExecuteChange()
-        {
-            CanExecuteChanged?.Invoke(this, EventArgs.Empty);
-        }
+        protected void OnExecuteChange() => CanExecuteChanged?.Invoke(this, EventArgs.Empty);
+        
     }
 }

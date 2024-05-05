@@ -4,16 +4,15 @@ namespace Logic
 {
     internal class SimulationController : AbstractLogicApi
     {
-        private ISet<IObserver<IEnumerable<Ball>>> _observers; //obiekty IObserver ktory otrzymaja aktualizacje o stanie zmian symulacji
+        private ISet<IObserver<IEnumerable<Ball>>> _observers = new HashSet<IObserver<IEnumerable<Ball>>>(); //obiekty IObserver ktory otrzymaja aktualizacje o stanie zmian symulacji
         private AbstractDataApi _data; // Referencja do obiektu klasy AbstractDataApi ktory inicjuje dane symulacji 
         private ManageSimulation _manageSimulation; // obiekt ManageSimulation ktory zarzadza symulacja
         private bool _isWorking = false; // Sprawdza czy symulacja dziala czy nie
-
+        private Thread _simulationThread;
         public SimulationController(AbstractDataApi? data = default)  
         {
             _data = data ?? AbstractDataApi.CreateInstance(); // Jesli obiekt data nie istnieje, stworz domyslny
             _manageSimulation = new ManageSimulation(new Window(_data.WidthWindow, _data.HeightWindow), _data.BallRadius); // stworz nowa obiekt Simulationmanager z parametrami dostarczonymi przez obiekt data
-            _observers = new HashSet<IObserver<IEnumerable<Ball>>>();  // zainicjuj liczbe obserwatorow
         }
         public override void SpawnBalls(int numberOfBalls)
         {
@@ -21,13 +20,14 @@ namespace Logic
         }
 
         internal override IEnumerable<Ball> Balls => _manageSimulation.Balls; // Zaimplementuj wlanosci kul z interfejsu AbstractLogicApi
-
+        
         public override void Start() //start symulacji
         {
             if (!_isWorking)
             {
                 _isWorking = true;
-                Task.Run(Simulation); //Zacznij nowe zadanie ktore rozpoczyna metode symulacji asynchronicznie 
+                _simulationThread = new Thread(Simulation);
+                _simulationThread.Start();
             }
         }
 
@@ -36,19 +36,13 @@ namespace Logic
             _isWorking = false; //ustaw flage na nie 
         }
 
-        public override IDisposable Subscribe(IObserver<IEnumerable<IBall>> observer) 
-        {
-            _observers.Add(observer); //dodaj obserwatora
-            return new SubscriptionController(_observers, observer); // zwroc obiekt SubscriptionController ktroy zarzadza subskrypcja observera
-        }
-
         public override void Simulation() 
         {
             while (_isWorking)
             {
                 _manageSimulation.ballsForce(); // zastosuj sile wobec kul w symulacji
                 BallTracker(Balls);
-                Thread.Sleep(10); // zaczekaj przez 10 milisekund
+                Thread.Sleep(15); // zaczekaj przez 10 milisekund
             }
         }
 
@@ -58,6 +52,13 @@ namespace Logic
             {
                 observer.OnNext(Balls); // Jesli kolekcja kul nie jest null, powiadamia observera wywolujac OnNext
             }
+        }
+
+        public override IDisposable Subscribe(IObserver<IEnumerable<IBall>> observer)
+        {
+            var subscription = new SubscriptionController(_observers, observer);
+            _observers.Add(observer);
+            return subscription;
         }
 
         private class SubscriptionController : IDisposable 

@@ -20,6 +20,11 @@ namespace ViewModel
         // Parametr propertyName jest automatycznie wypełniany nazwą wywołującej właściwości, więc nie trzeba go przekazywać jawnie.
         protected bool SetField<T>(ref T field, T value, [CallerMemberName] string propertyName = "")
         {
+            if (string.IsNullOrEmpty(propertyName))
+            {
+                throw new ArgumentNullException(nameof(propertyName));
+            }
+
             if (EqualityComparer<T>.Default.Equals(field, value))
             {
                 // Jeśli nowa wartość jest taka sama jak bieżąca, nie ma potrzeby aktualizowania pola ani wywoływania zdarzenia.

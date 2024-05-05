@@ -10,7 +10,7 @@ namespace ViewModel
 
         public Start(SimViewModel simViewModel) : base()
         {
-            _simViewModel = simViewModel;
+            _simViewModel = simViewModel ?? throw new ArgumentNullException(nameof(simViewModel));
             _simViewModel.PropertyChanged += OnSimulationViewModelPropertyChanged;
         }
 
@@ -19,8 +19,7 @@ namespace ViewModel
         // Zwraca wartość true, jeśli podstawowa implementacja CanExecute zwraca wartość true, a symulacja jeszcze nie jest uruchomiona.
         public override bool CanExecute(object? parameter)
         {
-            return base.CanExecute(parameter)
-                && !_simViewModel.IsWorking;
+            return base.CanExecute(parameter) && !_simViewModel.IsWorking;
         }
 
         // Implementacja metody Execute interfejsu ICommand.

@@ -25,12 +25,11 @@
         }
 
 
-        // Sprawdza, czy instancja Vector jest równa innemu instancji Vector
+        // Sprawdza, czy instancja Vector jest równa innej instancji Vector
         public bool Equals(Vector2 other)
         {
-            double xDiff = X - other.X;
-            double yDiff = Y - other.Y;
-            return Math.Pow(xDiff,2) + Math.Pow(yDiff,2) < 9.99999944E-11f;
+            const double tolerance = 1e-10; // Stała tolerancji dla porównywania wartości zmiennoprzecinkowych
+            return Math.Abs(X - other.X) < tolerance && Math.Abs(Y - other.Y) < tolerance;
         }
 
 

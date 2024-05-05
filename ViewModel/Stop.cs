@@ -16,15 +16,10 @@ namespace ViewModel
         public override bool CanExecute(object? parameter)
         {
             // Sprawdź, czy podstawowa metoda CanExecute zwraca wartość true i czy symulacja jest aktualnie uruchomiona
-            return base.CanExecute(parameter)
-                && _simViewModel.IsWorking;
+            return base.CanExecute(parameter) && _simViewModel.IsWorking;
         }
 
-        public override void Execute(object? parameter)
-        {
-            // Wywołaj metodę StopSim instancji SimViewModel
-            _simViewModel.StopSim();
-        }
+        public override void Execute(object? parameter) => _simViewModel.StopSim(); // Wywołaj metodę StopSim instancji SimViewModel
 
         private void OnSimulationViewModelPropertyChanged(object? sender, PropertyChangedEventArgs e)
         {

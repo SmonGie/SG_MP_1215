@@ -8,7 +8,7 @@ namespace Model
         // Metody abstrakcyjne, które muszą zostać zaimplementowane przez klasy dziedziczące:
         public abstract void SpawnBalls(int numberOfBalls);
 
-        public abstract void Start();
+        public abstract void Start();  
 
         public abstract void Stop();
 

@@ -16,11 +16,11 @@ namespace ViewModel
 
 
         // Ta własnosc zwraca kolekcję obiektów BallModel, które są aktualnie wyświetlane w interfejsie użytkownika.
-        public IEnumerable<IBallModel> Balls { get { return _balls; } }
+        public IEnumerable<IBallModel> Balls => _balls;
 
        
-        public ICommand Start { get; init; }
-        public ICommand Stop { get; init; }
+        public ICommand Start { get; }
+        public ICommand Stop { get; }
 
         public SimViewModel(AbstractModelApi? model = default) : base()
         {
@@ -69,10 +69,8 @@ namespace ViewModel
             _unsubscriber = provider.Subscribe(this);
         }
 
-        public void OnCompleted()
-        {
-            _unsubscriber?.Dispose();
-        }
+        public void OnCompleted() => _unsubscriber?.Dispose();
+        
 
         
         public void OnError(Exception error)
@@ -83,11 +81,7 @@ namespace ViewModel
   
         public void OnNext(IEnumerable<IBallModel> balls)
         {
-            if (balls is null)
-            {
-                balls = new List<IBallModel>();
-            }
-            _balls = new ObservableCollection<IBallModel>(balls);
+            _balls = new ObservableCollection<IBallModel>(balls ?? new List<IBallModel>());
             OnPropertyChanged(nameof(Balls));
         }
         #endregion
