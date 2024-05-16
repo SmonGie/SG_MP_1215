@@ -1,16 +1,42 @@
-﻿namespace Data
+﻿using System.Diagnostics;
+using System.Numerics;
+
+namespace Data
 {
     //Definicja klasy Data jako wewnetrzenj i podklasy AbstractDataApi
     internal class Data : AbstractDataApi
     {
-        //nadpisanie wartosci BallRadius, wartoscia 20
-        public override int BallRadius => 20;
-        //nadpisanie wartosci HeightWindow, wartoscia 500
-        public override int HeightWindow => 500;
-        //nadpisanie wartosci WidthWindow, wartoscia 800
-        public override int WidthWindow => 800;
+        private int Height;
+        private int Width;
 
-     
-        
+        public override int getWidthOfWindow()
+        {
+            return Width;
+        }
+
+        public override int getHeightOfWindow()
+        {
+            return Height;
+        }
+        public Data(int HeightOfWindow, int WidthOfWindow)
+        {
+            Height = HeightOfWindow;
+            Width = WidthOfWindow;
+        }
+
+        public override AbstractBallApi SpawnBalls(bool isWorking)
+        {
+            int mass = 5;
+            Random random = new Random();
+            int positionX = random.Next(10, Width - 10);
+            int positionY = random.Next(10, Height - 10);
+
+            int velocityX = random.Next(-5, 5);
+            int velocityY = random.Next(-5, 5);
+
+            Vector2 position = new Vector2(positionX, positionY);
+
+            return AbstractBallApi.CreateInstance(position, velocityX, velocityY, mass, isWorking);
+        }
     }
 }
