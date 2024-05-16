@@ -36,6 +36,18 @@ namespace Logic
                 ball.isWorking = false;
             }
         }
-
+        public override void SpawnBalls()
+        {
+            AbstractBallApi ball = dataApi.SpawnBalls(true);
+            if(logicBalls.Count<=0)
+            {
+                ball.isWorking=true;
+            }
+            else
+            {
+                ball.isWorking = logicBalls[0].isWorking;
+            }
+            logicBalls.Add(ball);
+        }
     }
 }
