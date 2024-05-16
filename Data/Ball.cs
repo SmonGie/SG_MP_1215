@@ -17,16 +17,18 @@ namespace Data
         private int Vy;
         private bool isWorkingSim;
         private readonly int mass;
+        private readonly int radius;
         private object lockBall = new object();
         private Stopwatch stopwatch = new Stopwatch();
 
-        public Ball(Vector2 position, int vx, int vy, int mass, bool isWorkingSim)
+        public Ball(Vector2 position, int vx, int vy, int mass, int radius, bool isWorkingSim)
         {
             this.position = position;
             Vx = vx;
             Vy = vy;
             this.isWorkingSim = isWorkingSim;
             this.mass = mass;
+            this.radius = radius;
         }
         public override void AddPropertyChangedListener(PropertyChangedEventHandler handler)
         {
@@ -97,6 +99,7 @@ namespace Data
         }
 
         public override int Mass => mass;
+        public override int Radius => radius;
 
         private async Task Move()
         {

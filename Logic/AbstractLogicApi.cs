@@ -6,7 +6,7 @@ namespace Logic
     {
         public abstract int BoardWidth {  get; }
         public abstract int BoardHeight { get; }
-        public abstract void GetPositionX(int id);
+        public abstract int GetPositionX(int id);
         public abstract int GetPositionY(int id);
         public abstract void StartSimulation();
         public abstract void StopSimulation();
