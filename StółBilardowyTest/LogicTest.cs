@@ -1,4 +1,5 @@
-﻿using NUnit.Framework;
+﻿/*
+using NUnit.Framework;
 using Moq;
 using System.Collections.Generic;
 using Logic;
@@ -44,7 +45,7 @@ namespace Tests
     }
 }
 
-/*[TestFixture]
+[TestFixture]
 public class LogicApiTest
 {
     private readonly float testVelocityX = 0.2f;

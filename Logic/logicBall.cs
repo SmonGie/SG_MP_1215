@@ -16,6 +16,26 @@ namespace Logic
         public logicBall(AbstractDataApi dataApi) 
         {
             logicBalls = new List<AbstractBallApi>();
+            this.dataApi =  dataApi;
+            this.BoardHeight = dataApi.getHeightOfWindow();
+            this.BoardWidth = dataApi.getWidthOfWindow();
         }
+
+        public override void StartSimulation()
+        {
+            foreach (var ball in logicBalls)
+            {
+                ball.isWorking = true;
+            }
+        }
+
+        public override void StopSimulation()
+        {
+            foreach (var ball in logicBalls)
+            {
+                ball.isWorking = false;
+            }
+        }
+
     }
 }
