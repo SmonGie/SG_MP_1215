@@ -2,28 +2,29 @@
 
 namespace Logic
 {
-    //Zdefiniuj klase AbstractLogicApi jako publiczna i zaimplementuj interfejs IObservable dla IEnumerable obiektow typu Ball
-    public abstract class AbstractLogicApi : IObservable<IEnumerable<IBall>>
+    public abstract class AbstractLogicApi
     {
-        //Zdefiniuj abstrakcyjna wartosc dla IEnumerable obiektow typu Ball
-        internal abstract IEnumerable<Ball> Balls { get; }  //Definicje abstraktyjnych metod
-        public abstract void Simulation();
-        public abstract void Start();
-        public abstract void Stop();
-        public abstract void SpawnBalls(int ballNumber);
-        public abstract IDisposable Subscribe(IObserver<IEnumerable<IBall>> observer);
-        //Definicja metody statycznej ktora tworzy instancje klasy AbstractLogicApi, z opcjonalnymi parametrami
-        public static AbstractLogicApi CreateInstance(AbstractDataApi? data = default)
+        public abstract int BoardWidth {  get; }
+        public abstract int BoardHeight { get; }
+        public abstract void GetPositionX(int id);
+        public abstract int GetPositionY(int id);
+        public abstract void StartSimulation();
+        public abstract void StopSimulation();
+        public abstract void SpawnBalls();
+       
+
+        public abstract List<AbstractBallApi> logicBalls { get; }
+        public static AbstractLogicApi CreateInstance(int boardWidth, int boardHeight, AbstractDataApi DataInformation)
         {
-            //zwroc nowa instancje klasy SimulationController przekazywanej przez instancje AbstractDataApi albo stworz nowa jesli nie jest zapewniona
-            return new SimulationController(data ?? AbstractDataApi.CreateInstance());
+            if (DataInformation == null)
+            {
+                return new logicBall(AbstractDataApi.CreateInstance(boardWidth, boardHeight));
+            }
+            else
+            {
+                return new logicBall(DataInformation);
+            }
         }
     }
-    public interface IBall
-    {
-        Vector2 Velocity { get; }
-        Vector2 Position { get; }
-        int Radius { get; }
-        int Diameter { get; }
-    }
+ 
 }
