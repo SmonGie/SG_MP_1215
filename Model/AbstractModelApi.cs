@@ -1,37 +1,27 @@
+﻿
 ﻿using Logic;
+using Data;
+using System.Collections.ObjectModel;
 
 namespace Model
 {
-    // Klasa abstrakcyjna implementująca interfejsy IObserver oraz IObservable z parametrami generycznymi.
-    public abstract class AbstractModelApi : IObserver<IEnumerable<IBall>>, IObservable<IEnumerable<IBallModel>>
+    public abstract class AbstractModelApi
     {
-        // Metody abstrakcyjne, które muszą zostać zaimplementowane przez klasy dziedziczące:
-        public abstract void SpawnBalls(int numberOfBalls);
+        public abstract void StartSimulation();
+        public abstract void StopSimulation();
+        public abstract void SpawnBall();
+        public abstract ObservableCollection<object> GetBalls();
 
-        public abstract void Start();  
-
-        public abstract void Stop();
-
-        public abstract void OnCompleted();
-
-        public abstract void OnError(Exception error);
-
-        public abstract void OnNext(IEnumerable<IBall> balls);
-
-        public abstract IDisposable Subscribe(IObserver<IEnumerable<IBallModel>> observer);
-
-        // Metoda statyczna tworząca instancję klasy Model, przekazująca instancję logiki, jeśli jest dostępna.
-        public static AbstractModelApi CreateInstance(AbstractLogicApi? logic = default)
+        public static AbstractModelApi CreateInstance(int windowHeight, int windowWidth, AbstractBallApi logicAPI)
         {
-            return new Model(logic ?? AbstractLogicApi.CreateInstance());
+            if (logicAPI == null)
+            {
+                return new Model(AbstractBallApi.CreateInstance(windowHeight, windowWidth, null));
+            }
+            else
+            {
+                return new Model(logicAPI);
+            }
         }
-    }
-
-    public interface IBallModel
-    {
-        Vector2 Velocity { get; }
-        Vector2 Position { get; }
-        int Radius { get; }
-        int Diameter { get; }
     }
 }

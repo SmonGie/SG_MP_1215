@@ -1,114 +1,45 @@
+﻿
+
 ﻿using Logic;
+using Data;
+using System.Collections.ObjectModel;
 
 namespace Model
 {
-    // Ta klasa reprezentuje konkretną implementację AbstractModelAPI i zapewnia funkcjonalność
-    // śledzenie i symulowanie kuler. Spełnia rolę zarówno obserwatora dostarczającego kule, jak i obserwatora
-    // dostawca BallModels dla swoich obserwatorów.
     internal class Model : AbstractModelApi
     {
-        private AbstractLogicApi _logic;  // referencja do instancji AbstractLogicApi
-        private ISet<IObserver<IEnumerable<IBallModel>>> _observers = new HashSet<IObserver<IEnumerable<IBallModel>>>(); // Zestaw obserwatorów śledzących BallModels
-        private IDisposable? _unsubscriber; // Obiekt reprezentujący subskrypcję między Modelem a Observable
+        private AbstractBallApi _ballAPI;
 
-        // Konstruktor tworzący instancję Modelu z referencją do obiektu AbstractLogicApi
-        public Model(AbstractLogicApi? logic = default)
+        public Model(AbstractBallApi ballAPI)
         {
-            _logic = logic ?? AbstractLogicApi.CreateInstance(); // Jeśli logic ma wartość null, utwórz nową instancję AbstractLogicAPI
-            Subscribe(_logic); // zasubsrybuj model do observable
+            _ballAPI = ballAPI;
         }
 
-        // Metoda to tworzenia kul przy pomocy obiektu AbstractLogicApi
-        public override void SpawnBalls(int numberOfBalls) => _logic.SpawnBalls(numberOfBalls);
-
-        // Metoda do tworzenia symulacji przy pomocy przy pomocy obiektu AbstractLogicApi
-        public override void Start() => _logic.Start();
-
-        // Metoda do zatrzymywania symulacji przy pomocy obiektu AbstractLogicApi
-        public override void Stop() => _logic.Stop();
-
-        // Metoda do przekonwertowania obiektow Ball do obiektow BallModel 
-        public static IEnumerable<IBallModel> BallToBallModel(IEnumerable<IBall> balls)
+        public override ObservableCollection<object> GetBalls()
         {
-            return balls.Select(ball => new BallModel(ball));
-        }
+            ObservableCollection<object> _balls = new ObservableCollection<object>();
 
-        #region Observer
-        
-        public void Subscribe(IObservable<IEnumerable<IBall>> provider)
-        {
-            _unsubscriber = provider.Subscribe(this);
-        }
-
-        
-        public override void OnCompleted() => _unsubscriber?.Dispose(); 
-        
-
-       
-        public override void OnError(Exception error)
-        {
-            throw error;
-        }
-
-        
-        public override void OnNext(IEnumerable<IBall> balls) => TrackBalls(BallToBallModel(balls)); 
-        
-        #endregion
-
-        #region Provider
-        
-        public override IDisposable Subscribe(IObserver<IEnumerable<IBallModel>> observer)
-        {
-            if (!_observers.Contains(observer))
+            foreach (object _ball in _ballAPI.BallsList)
             {
-                _observers.Add(observer);
+                _balls.Add(_ball);
             }
 
-            return new SubscriptionController(_observers, observer); 
+            return _balls;
         }
 
-       
-        private class SubscriptionController : IDisposable
+        public override void SpawnBall()
         {
-            private ISet<IObserver<IEnumerable<IBallModel>>> _observers;
-            private IObserver<IEnumerable<IBallModel>> _observer;
-
-            public SubscriptionController(ISet<IObserver<IEnumerable<IBallModel>>> observers, IObserver<IEnumerable<IBallModel>> observer)
-            {
-                _observers = observers;
-                _observer = observer;
-            }
-
-            public void Dispose() => _observers.Remove(_observer);
-            
+            _ballAPI.SpawnBall();
         }
 
-        public void TrackBalls(IEnumerable<IBallModel> balls)
+        public override void StartSimulation()
         {
-            
-            if (!balls.Any())
-            {
-                throw new InvalidOperationException("No balls to track.");
-            }
-
-            foreach (var observer in _observers)
-            {
-                observer.OnNext(balls);
-            }
+            _ballAPI.StartSimulation();
         }
 
-        public void CompleteTracking()
+        public override void StopSimulation()
         {
-            
-            foreach (var observer in _observers)
-            {
-                    observer.OnCompleted();
-            }
-
-            _observers.Clear();
+            _ballAPI.StopSimulation();
         }
-
-        #endregion
     }
 }
-
