@@ -1,42 +1,76 @@
-﻿using System.ComponentModel;
-using System.Runtime.CompilerServices;
+﻿using Model;
+using System.Collections.ObjectModel;
+using System.Windows.Input;
 
 namespace ViewModel
 {
-    // Ta klasa abstrakcyjna reprezentuje ViewModel, który jest odpowiedzialny za dostarczanie danych i zachowanie widoku w środowisku MVVM.
-    // Implementuje interfejs INotifyPropertyChanged, który umożliwia elementom interfejsu użytkownika nasłuchiwanie zmian we wlasciwosciach ViewModel.
-    public abstract class ViewModel : INotifyPropertyChanged
+    internal class ViewModel : MainViewModel
     {
-        // To zdarzenie jest wywoływane, gdy zmienia się właściwość ViewModel.
-        public event PropertyChangedEventHandler? PropertyChanged;
+        private readonly AbstractModelApi _modelAPI;
+        private ObservableCollection<object> _balls;
+        private int _numberOfBalls;
 
-        // Ta metoda wywołuje zdarzenie PropertyChanged, aby powiadomić interfejs użytkownika o zmianie właściwości.
-        protected void OnPropertyChanged(string propertyName)
+        public override ICommand StartSimInput { get; }
+        public override ICommand StopSimInput { get; }
+        public override ICommand SpawnBallInput { get; }
+
+        public ViewModel(int windowHeight, int windowWidth)
         {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+            _modelAPI = AbstractModelAPI.CreateInstance(windowHeight, windowWidth, null);
+            StartSimInput = new Command(StartSimulation);
+            StopSimInput = new Command(StopSimulation);
+            SpawnBallInput = new Command(SpawnBall);
+            Balls = GetBalls();
         }
 
-        // Ta metoda ustawia wartość pola i wywołuje zdarzenie PropertyChanged, jeśli wartość uległa zmianie.
-        // Parametr propertyName jest automatycznie wypełniany nazwą wywołującej właściwości, więc nie trzeba go przekazywać jawnie.
-        protected bool SetField<T>(ref T field, T value, [CallerMemberName] string propertyName = "")
+        public override ObservableCollection<object> Balls
         {
-            if (string.IsNullOrEmpty(propertyName))
+            get => _balls;
+            set
             {
-                throw new ArgumentNullException(nameof(propertyName));
+                _balls = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public int NumberOfBalls
+        {
+            get => _numberOfBalls;
+            set
+            {
+                _numberOfBalls = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public override ObservableCollection<object> GetBalls()
+        {
+            return _modelAPI.GetBalls();
+        }
+
+        public override void SpawnBall()
+        {
+            int _maxNumberOfBalls = 10;
+            int _currentBallsCount = Balls.Count;
+            int _remainingBalls = Math.Max(0, _maxNumberOfBalls - _currentBallsCount);
+            int _numberOfBalls = Math.Min(NumberOfBalls, _remainingBalls);
+
+            for (int i = 0; i < _numberOfBalls; i++)
+            {
+                _modelAPI.SpawnBall();
             }
 
-            if (EqualityComparer<T>.Default.Equals(field, value))
-            {
-                // Jeśli nowa wartość jest taka sama jak bieżąca, nie ma potrzeby aktualizowania pola ani wywoływania zdarzenia.
-                return false;
-            }
-            field = value;
-            OnPropertyChanged(propertyName);
+            Balls = GetBalls();
+        }
 
-            // Zwraca wartość true, aby wskazać, że wartość uległa zmianie.
-            return true;
+        public override void StartSimulation()
+        {
+            _modelAPI.StartSimulation();
+        }
+
+        public override void StopSimulation()
+        {
+            _modelAPI.StopSimulation();
         }
     }
-
-
 }

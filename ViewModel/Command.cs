@@ -1,26 +1,43 @@
+﻿
 ﻿using System.Windows.Input;
 
 namespace ViewModel
 {
-    // Ta klasa abstrakcyjna reprezentuje polecenie, które może zostać wykonane przez element interfejsu użytkownika w warstwie ViewModel.
-    // Implementuje interfejs ICommand, który udostępnia metody sprawdzania, czy polecenie może zostać wykonane
-    // i wykonanie polecenia.
-    public abstract class Command : ICommand
+    // This class represents a command that can be executed by a UI element in the ViewModel layer.
+    // It implements the ICommand interface, which provides methods for querying whether the command can be executed
+    // and for executing the command.
+    public class Command : ICommand
     {
-        // To zdarzenie jest wywoływane, gdy zmienia się możliwość wykonania polecenia.
-        public event EventHandler? CanExecuteChanged;
+        public event EventHandler CanExecuteChanged;
 
-        // Ta metoda określa, czy polecenie może zostać wykonane z podanym parametrem.
-        // Domyślnie można wykonać wszystkie polecenia, ale klasy pochodne mogą zastąpić tę metodę, aby zapewnić bardziej szczegółową logikę.
-        public virtual bool CanExecute(object? parameter) => true;
+        private readonly Action _execute;
+        private readonly Func<bool> _canExecute;
 
-        // Ta metoda wykonuje polecenie z podanym parametrem.
-        // Klasy pochodne muszą zastąpić tę metodę, aby zapewnić specyficzne zachowanie polecenia.
-        public abstract void Execute(object? parameter);
+        public Command(Action execute, Func<bool> canExecute = null)
+        {
+            _execute = execute ?? throw new ArgumentNullException(nameof(execute));
+            _canExecute = canExecute;
+        }
 
-        // Ta metoda wywołuje zdarzenie CanExecuteChanged, aby powiadomić element interfejsu użytkownika o zmianie możliwości wykonania polecenia.
-        // Jest wywoływane przez klasy pochodne, gdy stan polecenia zmienia się w sposób wpływający na jego możliwość wykonania.
-        protected void OnExecuteChange() => CanExecuteChanged?.Invoke(this, EventArgs.Empty);
-        
+        // This method determines whether the command can be executed with the given parameter.
+        // By default, all commands can be executed, but derived classes can override this method to provide more specific logic.
+        public bool CanExecute(object parameter)
+        {
+            return _canExecute == null || _canExecute();
+        }
+
+        // This method executes the command with the given parameter.
+        // Derived classes must override this method to provide the specific behavior of the command.
+        public void Execute(object parameter)
+        {
+            _execute();
+        }
+
+        // This method raises the CanExecuteChanged event to notify the UI element that the ability to execute the command has changed.
+        // It is called by derived classes when the state of the command changes in a way that affects its ability to be executed.
+        protected virtual void OnExecuteChange()
+        {
+            CanExecuteChanged?.Invoke(this, EventArgs.Empty);
+        }
     }
 }
