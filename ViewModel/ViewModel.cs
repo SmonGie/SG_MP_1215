@@ -16,7 +16,7 @@ namespace ViewModel
 
         public ViewModel(int windowHeight, int windowWidth)
         {
-            _modelAPI = AbstractModelAPI.CreateInstance(windowHeight, windowWidth, null);
+            _modelAPI = AbstractModelApi.CreateInstance(windowHeight, windowWidth, null);
             StartSimInput = new Command(StartSimulation);
             StopSimInput = new Command(StopSimulation);
             SpawnBallInput = new Command(SpawnBall);
