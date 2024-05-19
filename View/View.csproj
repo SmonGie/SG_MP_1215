@@ -27,18 +27,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\ViewModel\ViewModel.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Update="App.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </None>
-    <None Update="MainWindow.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </None>
-    <None Update="SimWindow.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </None>
-  </ItemGroup>
+  </ItemGroup>    
 
 </Project>

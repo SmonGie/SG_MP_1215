@@ -18,7 +18,7 @@ namespace Logic
         {
             if (DataInformation == null)
             {
-                return new logicBall(AbstractDataApi.CreateInstance(boardWidth, boardHeight));
+                return new logicBall(AbstractDataApi.CreateInstance(boardHeight, boardWidth));
             }
             else
             {

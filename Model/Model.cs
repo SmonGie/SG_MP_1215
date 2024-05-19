@@ -8,18 +8,18 @@ namespace Model
 {
     internal class Model : AbstractModelApi
     {
-        private AbstractBallApi _ballAPI;
+        private AbstractLogicApi _logicApi;
 
-        public Model(AbstractBallApi ballAPI)
+        public Model(AbstractLogicApi logicApi)
         {
-            _ballAPI = ballAPI;
+            _logicApi = logicApi;
         }
 
         public override ObservableCollection<object> GetBalls()
         {
             ObservableCollection<object> _balls = new ObservableCollection<object>();
 
-            foreach (object _ball in _ballAPI.BallsList)
+            foreach (object _ball in _logicApi.logicBalls)
             {
                 _balls.Add(_ball);
             }
@@ -29,17 +29,17 @@ namespace Model
 
         public override void SpawnBall()
         {
-            _ballAPI.SpawnBall();
+            _logicApi.SpawnBalls();
         }
 
         public override void StartSimulation()
         {
-            _ballAPI.StartSimulation();
+            _logicApi.StartSimulation();
         }
 
         public override void StopSimulation()
         {
-            _ballAPI.StopSimulation();
+            _logicApi.StopSimulation();
         }
     }
 }

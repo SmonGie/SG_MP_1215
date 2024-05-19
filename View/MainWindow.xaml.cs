@@ -1,18 +1,14 @@
-﻿using Logic;
-using System.Windows;
+﻿using System.Windows;
+using ViewModel;
 
 namespace View
 {
-    public partial class MainWindow : System.Windows.Window
+    public partial class MainWindow : Window
     {
-        public MainWindow() : base()
+        public MainWindow()
         {
             InitializeComponent();
-        }
-
-        private void SimWindow_Loaded(object sender, RoutedEventArgs e)
-        {
-
+            DataContext = AbstractViewModelApi.CreateInstance(800, 500);
         }
     }
 }

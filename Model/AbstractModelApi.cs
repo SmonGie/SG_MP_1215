@@ -12,15 +12,15 @@ namespace Model
         public abstract void SpawnBall();
         public abstract ObservableCollection<object> GetBalls();
 
-        public static AbstractModelApi CreateInstance(int windowHeight, int windowWidth, AbstractBallApi logicAPI)
+        public static AbstractModelApi CreateInstance(int windowHeight, int windowWidth, AbstractLogicApi logicApi)
         {
-            if (logicAPI == null)
+            if (logicApi == null)
             {
-                return new Model(AbstractBallApi.CreateInstance(windowHeight, windowWidth, null));
+                return new Model(AbstractLogicApi.CreateInstance(windowWidth, windowHeight, null));
             }
             else
             {
-                return new Model(logicAPI);
+                return new Model(logicApi);
             }
         }
     }

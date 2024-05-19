@@ -27,6 +27,7 @@ namespace Data
         public override AbstractBallApi SpawnBalls(bool isWorking)
         {
             int mass = 5;
+            int radius = 10;
             Random random = new Random();
             int positionX = random.Next(10, Width - 10);
             int positionY = random.Next(10, Height - 10);
@@ -36,7 +37,7 @@ namespace Data
 
             Vector2 position = new Vector2(positionX, positionY);
 
-            return AbstractBallApi.CreateInstance(position, velocityX, velocityY, mass, isWorking);
+            return AbstractBallApi.CreateInstance(position, velocityX, velocityY, mass, radius, isWorking);
         }
     }
 }

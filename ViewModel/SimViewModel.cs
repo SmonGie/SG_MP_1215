@@ -6,85 +6,71 @@ namespace ViewModel
 {
     // Ta klasa reprezentuje ViewModel dla widoku symulacji.
     // Implementuje interfejs IObserver do otrzymywania powiadomień od Modelu, gdy zmienia się kolekcja obiektów BallModel.
-    internal class SimViewModel : ViewModel, IObserver<IEnumerable<IBallModel>>
+    internal class ViewModel : AbstractViewModelApi
     {
-        private IDisposable? _unsubscriber;
-        private ObservableCollection<IBallModel> _balls;
-        private AbstractModelApi _logic;
-        private int _numberofBalls;
-        private bool _isWorking = false;
+       private ObservableCollection<object> ballss;
+       private readonly AbstractModelApi modelApi;
+       private int ballsCount;
+       public override ICommand StartCommand { get; }
+       public override ICommand StopCommand { get; }
+       public override ICommand SpawnBallCommand { get; }
 
-
-        // Ta własnosc zwraca kolekcję obiektów BallModel, które są aktualnie wyświetlane w interfejsie użytkownika.
-        public IEnumerable<IBallModel> Balls => _balls;
-
-       
-        public ICommand Start { get; }
-        public ICommand Stop { get; }
-
-        public SimViewModel(AbstractModelApi? model = default) : base()
-        {
-            // Jeśli nie podano obiektu AbstractModelApi, utwórz nowy za pomocą metody CreateInstance.
-            _logic = model ?? AbstractModelApi.CreateInstance();
-            _balls = new ObservableCollection<IBallModel>();
-
-            // Zainicjuj polecenia Start i Stop nowymi instancjami odpowiednich klas wejściowych.
-            Start = new Start(this);
-            Stop = new Stop(this);
-
-            //Zaubskrybuj powiadomienia od Model.
-            Subscriber(_logic);
-        }
-        // Ta właściwość reprezentuje liczbę obiektów BallModel, które powinny zostać utworzone po rozpoczęciu symulacji.
-        public int NumberofBalls
-        {
-            get => _numberofBalls;
-            set { SetField(ref _numberofBalls, value); }
-        }
-        //Ta metoda sprawdz czy symulacja dziala
-        public bool IsWorking
-        {
-            get { return _isWorking; }
-            private set { SetField(ref _isWorking, value); }
+       public ViewModel(int boardHeight, int boardWidth)
+       {
+            modelApi = AbstractModelApi.CreateInstance(boardHeight, boardWidth, null);
+            balls = GetBalls();
+            StartCommand = new Command(StartSim);
+            StopCommand = new Command(StopSim);
+            SpawnBallCommand = new Command(SpawnBall);
         }
 
-        //Ta metoda zaczyna symulacje
-        public void StartSim()
-        {
-            IsWorking = true;
-            _logic.SpawnBalls(NumberofBalls);
-            _logic.Start();
-        }
-        //Ta metoda zatrzymuje symulacje
-        public void StopSim()
-        {
-            IsWorking = false;
-            _logic.Stop();
-        }
+       public override void SpawnBall()
+       {
+           int maxBalls = 24;
+           int currentBallsCount = balls.Count;
+           int remainingBalls = Math.Max(0, maxBalls - currentBallsCount);
+           int numberOfBalls = Math.Min(ballsCount, remainingBalls);
 
-        #region Observer
+           for (int i = 0; i < numberOfBalls; i++)
+           {
+               modelApi.SpawnBall();
+           }
 
-        public void Subscriber(IObservable<IEnumerable<IBallModel>> provider)
-        {
-            _unsubscriber = provider.Subscribe(this);
-        }
+           balls = GetBalls();
+       }
 
-        public void OnCompleted() => _unsubscriber?.Dispose();
-        
+        public int BallsCount
+       {
+           get => ballsCount;
+           set
+           {
+               ballsCount = value;
+               OnPropertyChanged();
+           }
+       }
 
-        
-        public void OnError(Exception error)
-        {
-            throw error;
-        }
+        public override void StartSim()
+       {
+           modelApi.StartSimulation();
+       }
 
-  
-        public void OnNext(IEnumerable<IBallModel> balls)
-        {
-            _balls = new ObservableCollection<IBallModel>(balls ?? new List<IBallModel>());
-            OnPropertyChanged(nameof(Balls));
-        }
-        #endregion
+       public override void StopSim()
+       {
+           modelApi.StopSimulation();
+       }
 
+       public override ObservableCollection<object> balls
+       {
+           get => ballss;
+           set
+           {
+               ballss = value;
+               OnPropertyChanged();
+           }
+       }
+        public override ObservableCollection<object> GetBalls()
+       {
+           return modelApi.GetBalls();
+       }
     }
 }
