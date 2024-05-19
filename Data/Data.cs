@@ -32,8 +32,8 @@ namespace Data
             int positionX = random.Next(10, Width - 10);
             int positionY = random.Next(10, Height - 10);
 
-            int varX = random.Next(-3, 4);
-            int varY = random.Next(-3, 4);
+            int varX = random.Next(-5, 5);
+            int varY = random.Next(-5, 5);
 
             if (varX == 0)
             {

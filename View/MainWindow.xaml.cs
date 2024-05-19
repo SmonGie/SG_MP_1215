@@ -9,7 +9,7 @@ namespace View
         {
             InitializeComponent();
             
-            AbstractViewModelApi viewModel = AbstractViewModelApi.CreateInstance(150,300);
+            AbstractViewModelApi viewModel = AbstractViewModelApi.CreateInstance(150,305);
 
             DataContext = viewModel;
         }

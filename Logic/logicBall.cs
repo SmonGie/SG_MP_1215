@@ -85,13 +85,11 @@ namespace Logic
         private void BoardCollision(AbstractBallApi ball)
         {
             readerWriterLockSlim.EnterWriteLock();
-            Console.WriteLine("board locked");
             try
             {
                 int VelocityX = ball.VelocityX;
                 int VelocityY = ball.VelocityY;
                 Vector2 position = ball.Position;
-                Console.WriteLine($"Position before collision check: X={position.X}, Y={position.Y}");
 
                 // Perform collision detection
                 bool positionChanged = false;
@@ -111,11 +109,6 @@ namespace Logic
                 if (positionChanged)
                 {
                     ball.setVelocity(VelocityX, VelocityY);
-                    Console.WriteLine("Velocity updated after collision check");
-                }
-                else
-                {
-                    Console.WriteLine("No collision detected. Velocity remains unchanged.");
                 }
             }
             catch (Exception ex)
@@ -126,7 +119,6 @@ namespace Logic
             finally
             {
                 readerWriterLockSlim.ExitWriteLock();
-                Console.WriteLine("board Unlocked");
             }
         }
 
@@ -137,27 +129,25 @@ namespace Logic
             readerWriterLockSlim.EnterWriteLock();
             try
             {
-                Console.WriteLine("Ball collision started");
-
+                // Calculate the distance between the centers of the balls
                 float distance = Vector2.Distance(ball1.Position, ball2.Position);
 
+                // Check if the balls are colliding
                 if (distance <= ball1.Radius + ball2.Radius)
                 {
-                    Vector2 direction = Vector2.Normalize(ball2.Position - ball1.Position);
+                    int v1x = ball1.VelocityX;
+                    int v1y = ball1.VelocityY;
+                    int v2x = ball2.VelocityX;
+                    int v2y = ball2.VelocityY;
 
-                    Vector2 relativeVelocity = new Vector2(ball2.VelocityX - ball1.VelocityX, ball2.VelocityY - ball1.VelocityY);
-                    float relativeSpeed = Vector2.Dot(relativeVelocity, direction);
+                    int newV1X = (ball1.Mass * ball1.VelocityX + ball2.Mass * ball2.VelocityX - ball2.Mass * (ball1.VelocityX - ball2.VelocityX)) / (ball1.Mass + ball2.Mass);
+                    int newV1Y = (ball1.Mass * ball1.VelocityY + ball2.Mass * ball2.VelocityY - ball2.Mass * (ball1.VelocityY - ball2.VelocityY)) / (ball1.Mass + ball2.Mass);
+                    int newV2X = (ball1.Mass * ball1.VelocityX + ball2.Mass * ball2.VelocityX - ball1.Mass * (ball2.VelocityX - ball1.VelocityY)) / (ball1.Mass + ball2.Mass);
+                    int newV2Y = (ball1.Mass * ball1.VelocityY + ball2.Mass * ball2.VelocityY - ball2.Mass * (ball2.VelocityY - ball1.VelocityY)) / (ball1.Mass + ball2.Mass);
 
-                    if (relativeSpeed > 0)
-                        return;
+                    ball1.setVelocity(newV1X, newV1Y);
+                    ball2.setVelocity(newV2X, newV2Y);
 
-                    float impulseMagnitude = -2 * relativeSpeed / (1 / ball1.Mass + 1 / ball2.Mass);
-                    Vector2 impulse = impulseMagnitude * direction;
-
-                    ball1.VelocityX -= (int)(impulse.X / ball1.Mass);
-                    ball1.VelocityY -= (int)(impulse.Y / ball1.Mass);
-                    ball2.VelocityX += (int)(impulse.X / ball2.Mass);
-                    ball2.VelocityY += (int)(impulse.Y / ball2.Mass);
                 }
             }
             finally
@@ -168,18 +158,18 @@ namespace Logic
 
 
 
+
+
         private void CheckCollisions(object sender, PropertyChangedEventArgs e)
         {
             AbstractBallApi ball = (AbstractBallApi)sender;
             if (ball != null)
             {
-                Console.WriteLine("board collision check started");
                 BoardCollision(ball);
                 foreach (var ball2 in logicBalls)
                 {
                     if (!ball2.Equals(ball))
                     {
-                        Console.WriteLine("ball collision check started");
                         BallsCollision(ball, ball2);
                     }
                 }

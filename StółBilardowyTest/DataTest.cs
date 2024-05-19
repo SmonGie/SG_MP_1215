@@ -1,11 +1,10 @@
-/*
 using NUnit.Framework;
 using System.Numerics;
 
 namespace Data.Tests
 {
     [TestFixture]
-    public class BallAPITests
+    public class DataTest
     {
         private AbstractBallApi ball;
 
@@ -19,47 +18,17 @@ namespace Data.Tests
             int mass = 5;
             bool isSimulationRunning = false;
 
-            ball = AbstractBallApi.CreateInstance(position, deltaX, deltaY, mass, size, isSimulationRunning);
-        }
-
-        [Test]
-        public void BallAPI_Move_UpdatesPosition()
-        {
-            // Arrange
-            int initialX = ball.X;
-            int initialY = ball.Y;
-
-            // Act
-            ball.Move(); // Simulate movement
-
-            // Assert
-            Assert.AreEqual(initialX + ball.VelocityX, ball.X);
-            Assert.AreEqual(initialY + ball.VelocityY, ball.Y);
-        }
-
-        [Test]
-        public void BallAPI_CreateBallAPITest()
-        {
-            Assert.IsNotNull(ball);
-            Assert.IsInstanceOf<AbstractBallApi>(ball);
+            ball = AbstractBallApi.CreateInstance(position, deltaX, deltaY, size, mass, isSimulationRunning);
         }
 
         [Test]
         public void BallAPI_PositionTest()
         {
-            Vector2 expectedPosition = new Vector2(2, 2);
+            Vector2 position = new Vector2(2, 2);
 
-            Vector2 actualPosition = ball.Position;
+            var excpectedPosition = ball.Position;
 
-            Assert.AreEqual(expectedPosition, actualPosition);
-        }
-
-        // Add other test methods...
-
-        [Test]
-        public void BallAPI_IsSimulationRunning_GetValue()
-        {
-            Assert.IsFalse(ball.isWorking);
+            Assert.AreEqual(excpectedPosition, position);
         }
 
         // Add other test methods...
@@ -93,7 +62,5 @@ namespace Data.Tests
 
             Assert.AreEqual(expectedValue, 400);
         }
-
-
     }
-} */
+}

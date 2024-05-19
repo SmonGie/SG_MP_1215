@@ -31,7 +31,6 @@ namespace Data
             this.mass = mass;
             this.radius = radius;
             Task.Run(() => Move());
-            Console.WriteLine("Ball constructor called, Move task started");
         }
 
         public override void AddPropertyChangedListener(PropertyChangedEventHandler handler)
@@ -104,17 +103,13 @@ namespace Data
             velocityLock.Wait();
             try
             {
-                Console.WriteLine("setting velocity");
                 this.Vx = Vx;
                 this.Vy = Vy;
             }
             finally
             {
-                Console.WriteLine("unlocking velocity");
                 velocityLock.Release();
             }
-            OnPropertyChanged(nameof(VelocityX));
-            OnPropertyChanged(nameof(VelocityY));
         }
 
         public override int Mass => mass;
@@ -127,14 +122,12 @@ namespace Data
                 if (isWorking)
                 {
                     stopwatch.Restart();
-                    Console.WriteLine("Move method is running");
 
                     positionLock.Wait();
                     try
                     {
                         position.X += Vx;
                         position.Y += Vy;
-                        Console.WriteLine($"Moving to: X={position.X}, Y={position.Y}");
                     }
                     finally
                     {
@@ -146,12 +139,8 @@ namespace Data
                     stopwatch.Stop();
                     
                 }
-                else
-                {
-                    Console.WriteLine("isWorking is false, Move method paused");
-                }
                 double velocity = Math.Sqrt(Vx * Vx + Vy * Vy);
-                await Task.Delay(TimeSpan.FromMilliseconds(50));
+                await Task.Delay(TimeSpan.FromMilliseconds(60));
             }
         }
 
@@ -161,7 +150,6 @@ namespace Data
             set
             {
                 _isWorkingSim = value;
-                Console.WriteLine($"isWorking set to: {_isWorkingSim}");
             }
         }
 
