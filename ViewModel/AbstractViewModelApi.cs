@@ -1,7 +1,6 @@
 ﻿using Model;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.Dynamic;
 using System.Runtime.CompilerServices;
 using System.Windows.Input;
 
@@ -17,7 +16,7 @@ namespace ViewModel
         public abstract void StopSim();
         public abstract void SpawnBall();
         public abstract ObservableCollection<object> GetBalls();
-        public abstract ObservableCollection<object> balls{get; set; }
+        public abstract ObservableCollection<object> Balls{get; set; }
 
     public static AbstractViewModelApi CreateInstance(int windowHeight, int windowWidth)
         {

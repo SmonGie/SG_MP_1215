@@ -46,14 +46,9 @@ namespace Data
             }
         }
 
-        public override int PositionX
-        {
-            get { return (int)position.X; }
-        }
-        public override int PositionY
-        {
-            get { return (int)position.X; }
-        }
+        public override int X => (int)position.X;
+
+        public override int Y => (int)position.Y;
 
         private void setPosition(Vector2 Pos)
         {
@@ -96,6 +91,8 @@ namespace Data
                 this.Vx = Vx;
                 this.Vy = Vy;
             }
+            OnPropertyChanged(nameof(VelocityX));
+            OnPropertyChanged(nameof(VelocityY));
         }
 
         public override int Mass => mass;
@@ -120,9 +117,31 @@ namespace Data
         }
         public override bool isWorking
         {
-            get { return isWorking; }
-            set => isWorkingSim = value;
+            get
+            {
+                lock (lockBall)
+                {
+                    return isWorkingSim;
+                }
+            }
+            set
+            {
+                lock (lockBall)
+                {
+                    if (isWorkingSim != value)
+                    {
+                        isWorkingSim = value;
+                        OnPropertyChanged();
+                        if (isWorkingSim)
+                        {
+                            Task.Run(() => Move()); // Start the Move method in the background
+                        }
+                    }
+                }
+            }
         }
+
+        public override int Diameter => radius * 2;
 
         public event PropertyChangedEventHandler PropertyChanged;
 

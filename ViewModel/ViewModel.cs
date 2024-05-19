@@ -8,7 +8,7 @@ namespace ViewModel
     // Implementuje interfejs IObserver do otrzymywania powiadomień od Modelu, gdy zmienia się kolekcja obiektów BallModel.
     internal class ViewModel : AbstractViewModelApi
     {
-       private ObservableCollection<object> ballss;
+       private ObservableCollection<object> balls;
        private readonly AbstractModelApi modelApi;
        private int ballsCount;
        public override ICommand StartCommand { get; }
@@ -18,7 +18,7 @@ namespace ViewModel
        public ViewModel(int boardHeight, int boardWidth)
        {
             modelApi = AbstractModelApi.CreateInstance(boardHeight, boardWidth, null);
-            balls = GetBalls();
+            Balls = GetBalls();
             StartCommand = new Command(StartSim);
             StopCommand = new Command(StopSim);
             SpawnBallCommand = new Command(SpawnBall);
@@ -27,16 +27,16 @@ namespace ViewModel
        public override void SpawnBall()
        {
            int maxBalls = 24;
-           int currentBallsCount = balls.Count;
+           int currentBallsCount = Balls.Count;
            int remainingBalls = Math.Max(0, maxBalls - currentBallsCount);
-           int numberOfBalls = Math.Min(ballsCount, remainingBalls);
+           int numberOfBalls = Math.Min(BallsCount, remainingBalls);
 
            for (int i = 0; i < numberOfBalls; i++)
            {
                modelApi.SpawnBall();
            }
 
-           balls = GetBalls();
+           Balls = GetBalls();
        }
 
         public int BallsCount
@@ -59,12 +59,12 @@ namespace ViewModel
            modelApi.StopSimulation();
        }
 
-       public override ObservableCollection<object> balls
+       public override ObservableCollection<object> Balls
        {
-           get => ballss;
+           get => balls;
            set
            {
-               ballss = value;
+               balls = value;
                OnPropertyChanged();
            }
        }

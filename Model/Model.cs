@@ -1,5 +1,3 @@
-﻿
-
 ﻿using Logic;
 using Data;
 using System.Collections.ObjectModel;
@@ -19,9 +17,9 @@ namespace Model
         {
             ObservableCollection<object> _balls = new ObservableCollection<object>();
 
-            foreach (object _ball in _logicApi.logicBalls)
+            foreach (object ball in _logicApi.logicBalls)
             {
-                _balls.Add(_ball);
+                _balls.Add(ball);
             }
 
             return _balls;

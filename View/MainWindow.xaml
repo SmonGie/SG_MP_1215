@@ -5,77 +5,69 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ViewModel;assembly=ViewModel"
         mc:Ignorable="d"
-        d:DesignHeight="500" d:DesignWidth="800">
-    <Canvas Background="Green">
-        <TextBox
-                x:Name="NumberOfBalls"
-                VerticalAlignment="Bottom"
-                HorizontalAlignment="Left"
-                Height="30"
-                Width="200"
-                Background="BlueViolet"
-                Foreground="White"
-                TextAlignment="Center"
-                VerticalContentAlignment="Center"
-                Tag="Amount"
-                Text="{Binding NumberofBalls}" Canvas.Left="300" Canvas.Top="530"/>
-        <Button
-                Command="{Binding Start}"
-                Content="Start"
-                FontSize="20"
-                VerticalAlignment="Top"
-                Height="30"
-                Width="100"
-                HorizontalAlignment="Left"
-                VerticalContentAlignment="Center"
-                Background="Green"
-                Foreground="White" Canvas.Left="125" Canvas.Top="530"
-                />
-        <Button
-                Command="{Binding Stop}"
-                Content="Stop"
-                FontSize="20"
-                VerticalAlignment="Top"
-                Height="30"
-                Width="100"
-                HorizontalAlignment="Left"
-                VerticalContentAlignment="Center"
-                Background="Red"
-                Foreground="White" Canvas.Left="575" Canvas.Top="530"
-                />
-        <Border 
-                BorderThickness="2"
-                BorderBrush="Black"
-                Width="800"
-                Height="500">
-            <ItemsControl ItemsSource="{Binding Balls}">
-                <ItemsControl.ItemsPanel>
-                    <ItemsPanelTemplate>
-                        <Canvas Name="BallBoard"
-                                Width="800"
-                                Height="500">
-                        </Canvas>
-                    </ItemsPanelTemplate>
-                </ItemsControl.ItemsPanel>
-                <ItemsControl.ItemContainerStyle>
-                    <Style>
-                        <Setter Property="Canvas.Left" Value="{Binding Position.X}"/>
-                        <Setter Property="Canvas.Top" Value="{Binding Position.Y}"/>
-                    </Style>
-                </ItemsControl.ItemContainerStyle>
-                <ItemsControl.ItemTemplate>
-                    <DataTemplate>
-                        <Ellipse
-                                Height="10"
-                                Width="10"
-                                Margin="0, 0, 0, 0">
-                            <Ellipse.Fill>
-                                <SolidColorBrush Color="Yellow"/>
-                            </Ellipse.Fill>
-                        </Ellipse>
-                    </DataTemplate>
-                </ItemsControl.ItemTemplate>
-            </ItemsControl>
-        </Border>
-    </Canvas>
+        Title="MainWindow" Height="600" Width="1080">
+    <Window.Background>
+        <SolidColorBrush Color="Green"/>
+    </Window.Background>
+    <Window.Resources>
+        <Style x:Key="ButtonStyle" TargetType="Button">
+            <Setter Property="Background" Value="BlueViolet"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="Padding" Value="10 5"/>
+            <Setter Property="FontSize" Value="18"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Margin" Value="5"/>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="BlueViolet"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+    </Window.Resources>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <StackPanel Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Center" Margin="0 20" >
+            <Button Content="Start" Command="{Binding StartCommand}" Margin="5" Style="{StaticResource ButtonStyle}"/>
+            <Button Content="Stop" Command="{Binding StopCommand}" Margin="5" Style="{StaticResource ButtonStyle}"/>
+            <Button Content="Create Balls" Command="{Binding SpawnBallCommand}" Margin="5" Style="{StaticResource ButtonStyle}"/>
+        </StackPanel>
+        <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Center" Margin="0 20">
+            <TextBlock Text="Number of Balls:" VerticalAlignment="Center" Margin="0 0 5 0"/>
+            <TextBox x:Name="BallCountTextBox" Text="{Binding BallsCount}" Width="50" VerticalAlignment="Center" Margin="0 0 10 0"/>
+        </StackPanel>
+        <StackPanel Grid.Row="2">
+            <Canvas RenderOptions.EdgeMode="Aliased" Margin="220,40" Background="#3f3f3f" Height="335" Width="635">
+                <ItemsControl ItemsSource="{Binding Balls}" Padding="0">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <Canvas IsItemsHost="True" Background="AliceBlue" HorizontalAlignment="Center"/>
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <Ellipse Width="{Binding Diameter}" Height="{Binding Diameter}"
+             Fill="BlueViolet" Stroke="Black" StrokeThickness="0">
+                                <Ellipse.RenderTransform>
+                                    <TranslateTransform X="{Binding X}" Y="{Binding Y}" />
+                                </Ellipse.RenderTransform>
+                            </Ellipse>
+                        </DataTemplate>
+
+                    </ItemsControl.ItemTemplate>
+                    <ItemsControl.ItemContainerStyle>
+                        <Style TargetType="{x:Type ContentPresenter}">
+                            <Setter Property="Canvas.Left" Value="{Binding X}" />
+                            <Setter Property="Canvas.Top" Value="{Binding Y}" />
+                        </Style>
+                    </ItemsControl.ItemContainerStyle>
+                </ItemsControl>
+            </Canvas>
+        </StackPanel>
+    </Grid>
 </Window>
