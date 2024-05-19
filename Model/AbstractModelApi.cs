@@ -10,7 +10,7 @@ namespace Model
         public abstract void StartSimulation();
         public abstract void StopSimulation();
         public abstract void SpawnBall();
-        public abstract ObservableCollection<object> GetBalls();
+        public abstract ObservableCollection<object>? GetBalls();
 
         public static AbstractModelApi CreateInstance(int windowHeight, int windowWidth, AbstractLogicApi logicApi)
         {

@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
-using System.Linq;
 using System.Numerics;
 using System.Runtime.CompilerServices;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Data
@@ -15,21 +15,25 @@ namespace Data
         private Vector2 position;
         private int Vx;
         private int Vy;
-        private bool isWorkingSim;
+        private bool _isWorkingSim;
         private readonly int mass;
         private readonly int radius;
-        private object lockBall = new object();
+        private static readonly SemaphoreSlim velocityLock = new SemaphoreSlim(1);
+        private static readonly SemaphoreSlim positionLock = new SemaphoreSlim(1);
         private Stopwatch stopwatch = new Stopwatch();
 
-        public Ball(Vector2 position, int vx, int vy, int mass, int radius, bool isWorkingSim)
+        public Ball(Vector2 position, int vx, int vy, int mass, int radius, bool _isWorkingSim)
         {
             this.position = position;
             Vx = vx;
             Vy = vy;
-            this.isWorkingSim = isWorkingSim;
+            isWorking = _isWorkingSim;
             this.mass = mass;
             this.radius = radius;
+            Task.Run(() => Move());
+            Console.WriteLine("Ball constructor called, Move task started");
         }
+
         public override void AddPropertyChangedListener(PropertyChangedEventHandler handler)
         {
             this.PropertyChanged += handler;
@@ -39,36 +43,45 @@ namespace Data
         {
             get
             {
-                lock (lockBall)
+                positionLock.Wait();
+                try
                 {
                     return position;
                 }
+                finally { positionLock.Release(); }
             }
         }
 
-        public override int X => (int)position.X;
+        public override int PositionX => (int)position.X;
 
-        public override int Y => (int)position.Y;
+        public override int PositionY => (int)position.Y;
 
         private void setPosition(Vector2 Pos)
         {
-            lock (lockBall)
+            positionLock.Wait();
+            try
             {
                 position.X = Pos.X;
                 position.Y = Pos.Y;
             }
-            OnPropertyChanged(nameof(Position.X));
-            OnPropertyChanged(nameof(Position.Y));
+            finally
+            {
+                positionLock.Release();
+            }
+            OnPropertyChanged(nameof(PositionX));
+            OnPropertyChanged(nameof(PositionY));
         }
 
         public override int VelocityX
         {
             get
             {
-                lock (lockBall)
+                velocityLock.Wait();
+                try
                 {
                     return Vx;
                 }
+                finally { velocityLock.Release(); }
             }
             set => Vx = value;
         }
@@ -77,19 +90,28 @@ namespace Data
         {
             get
             {
-                lock (lockBall)
+                velocityLock.Wait();
+                try
                 {
                     return Vy;
                 }
+                finally { velocityLock.Release(); }
             }
             set => Vy = value;
         }
         public override void setVelocity(int Vx, int Vy)
         {
-            lock (lockBall)
+            velocityLock.Wait();
+            try
             {
+                Console.WriteLine("setting velocity");
                 this.Vx = Vx;
                 this.Vy = Vy;
+            }
+            finally
+            {
+                Console.WriteLine("unlocking velocity");
+                velocityLock.Release();
             }
             OnPropertyChanged(nameof(VelocityX));
             OnPropertyChanged(nameof(VelocityY));
@@ -100,44 +122,46 @@ namespace Data
 
         private async Task Move()
         {
-            while(true)
+            while (true)
             {
-                stopwatch.Restart();
-                if(isWorking)
+                if (isWorking)
                 {
-                    int posX = (int)position.X + Vx;
-                    int posY = (int)position.Y + Vy;
-                    Vector2 Pos = new Vector2(posX, posY);
-                    setPosition(Pos);
+                    stopwatch.Restart();
+                    Console.WriteLine("Move method is running");
+
+                    positionLock.Wait();
+                    try
+                    {
+                        position.X += Vx;
+                        position.Y += Vy;
+                        Console.WriteLine($"Moving to: X={position.X}, Y={position.Y}");
+                    }
+                    finally
+                    {
+                        positionLock.Release();
+                    }
+                    OnPropertyChanged(nameof(PositionX));
+                    OnPropertyChanged(nameof(PositionY));
+
+                    stopwatch.Stop();
+                    
+                }
+                else
+                {
+                    Console.WriteLine("isWorking is false, Move method paused");
                 }
                 double velocity = Math.Sqrt(Vx * Vx + Vy * Vy);
-                stopwatch.Stop();
-                await Task.Delay(TimeSpan.FromMilliseconds(1000 / 460 * velocity + (int)stopwatch.ElapsedMilliseconds));
+                await Task.Delay(TimeSpan.FromMilliseconds(50));
             }
         }
+
         public override bool isWorking
         {
-            get
-            {
-                lock (lockBall)
-                {
-                    return isWorkingSim;
-                }
-            }
+            get { return _isWorkingSim; }
             set
             {
-                lock (lockBall)
-                {
-                    if (isWorkingSim != value)
-                    {
-                        isWorkingSim = value;
-                        OnPropertyChanged();
-                        if (isWorkingSim)
-                        {
-                            Task.Run(() => Move()); // Start the Move method in the background
-                        }
-                    }
-                }
+                _isWorkingSim = value;
+                Console.WriteLine($"isWorking set to: {_isWorkingSim}");
             }
         }
 

@@ -1,57 +1,99 @@
 /*
-using Moq;
-using Data;
+using NUnit.Framework;
+using System.Numerics;
 
-namespace Tests
+namespace Data.Tests
 {
     [TestFixture]
-    public class AbstractDataApiTests
+    public class BallAPITests
     {
-        [Test]
-        public void CreateInstance_ReturnsNonNullInstance()
+        private AbstractBallApi ball;
+
+        [SetUp]
+        public void Setup()
         {
-            var mockDataApi = new Mock<AbstractDataApi>();
+            Vector2 position = new Vector2(2, 2);
+            int deltaX = 1;
+            int deltaY = 1;
+            int size = 10;
+            int mass = 5;
+            bool isSimulationRunning = false;
 
-            AbstractDataApi instance = mockDataApi.Object;
-
-            Assert.IsNotNull(instance);
+            ball = AbstractBallApi.CreateInstance(position, deltaX, deltaY, mass, size, isSimulationRunning);
         }
 
         [Test]
-        public void BallRadius_ReturnsValidValue()
+        public void BallAPI_Move_UpdatesPosition()
         {
-            
-            var mockDataApi = new Mock<AbstractDataApi>();
-            mockDataApi.Setup(api => api.BallRadius).Returns(10); // Ustawiamy wartość zwracaną przez BallRadius na 10
+            // Arrange
+            int initialX = ball.X;
+            int initialY = ball.Y;
 
-            int radius = mockDataApi.Object.BallRadius;
+            // Act
+            ball.Move(); // Simulate movement
 
-            Assert.AreEqual(10, radius);
+            // Assert
+            Assert.AreEqual(initialX + ball.VelocityX, ball.X);
+            Assert.AreEqual(initialY + ball.VelocityY, ball.Y);
         }
 
         [Test]
-        public void HeightWindow_ReturnsValidValue()
+        public void BallAPI_CreateBallAPITest()
         {
-            var mockDataApi = new Mock<AbstractDataApi>();
-            mockDataApi.Setup(api => api.HeightWindow).Returns(100); // Ustawiamy wartość zwracaną przez HeightWindow na 100
-
-            int height = mockDataApi.Object.HeightWindow;
-
-            Assert.AreEqual(100, height);
+            Assert.IsNotNull(ball);
+            Assert.IsInstanceOf<AbstractBallApi>(ball);
         }
 
         [Test]
-        public void WidthWindow_ReturnsValidValue()
+        public void BallAPI_PositionTest()
         {
-            var mockDataApi = new Mock<AbstractDataApi>();
-            mockDataApi.Setup(api => api.WidthWindow).Returns(200); // Ustawiamy wartość zwracaną przez WidthWindow na 200
+            Vector2 expectedPosition = new Vector2(2, 2);
 
-            int width = mockDataApi.Object.WidthWindow;
+            Vector2 actualPosition = ball.Position;
 
-            Assert.AreEqual(200, width);
+            Assert.AreEqual(expectedPosition, actualPosition);
         }
+
+        // Add other test methods...
+
+        [Test]
+        public void BallAPI_IsSimulationRunning_GetValue()
+        {
+            Assert.IsFalse(ball.isWorking);
+        }
+
+        // Add other test methods...
     }
-}
-*/
+
+    [TestFixture]
+    public class DataAPITest
+    {
+        private AbstractDataApi data;
+
+        [SetUp]
+        public void Setup()
+        {
+            int boardWidth = 500;
+            int boardHeight = 400;
+            data = AbstractDataApi.CreateInstance(boardHeight, boardWidth);
+        }
+
+        [Test]
+        public void DataAPI_getBoardWidth()
+        {
+            int expectedValue = data.getWidthOfWindow();
+
+            Assert.AreEqual(expectedValue, 500);
+        }
+
+        [Test]
+        public void DataAPI_getBoardHeight()
+        {
+            int expectedValue = data.getHeightOfWindow();
+
+            Assert.AreEqual(expectedValue, 400);
+        }
 
 
+    }
+} */

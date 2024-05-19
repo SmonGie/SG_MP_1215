@@ -15,8 +15,8 @@ namespace ViewModel
         public abstract void StartSim();
         public abstract void StopSim();
         public abstract void SpawnBall();
-        public abstract ObservableCollection<object> GetBalls();
-        public abstract ObservableCollection<object> Balls{get; set; }
+        public abstract ObservableCollection<object>? GetBalls();
+        public abstract ObservableCollection<object>? Balls{get; set; }
 
     public static AbstractViewModelApi CreateInstance(int windowHeight, int windowWidth)
         {

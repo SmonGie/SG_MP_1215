@@ -11,8 +11,8 @@ namespace Data
     public abstract class AbstractBallApi
     {
         public abstract Vector2 Position { get; }
-        public abstract int X { get; }
-        public abstract int Y { get; }
+        public abstract int PositionX { get; }
+        public abstract int PositionY { get; }
         public abstract int VelocityX { get; set; }
         public abstract int VelocityY { get; set; }
         public abstract int Mass { get; }

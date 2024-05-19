@@ -13,9 +13,9 @@ namespace Model
             _logicApi = logicApi;
         }
 
-        public override ObservableCollection<object> GetBalls()
+        public override ObservableCollection<object>? GetBalls()
         {
-            ObservableCollection<object> _balls = new ObservableCollection<object>();
+            ObservableCollection<object>? _balls = new ObservableCollection<object>();
 
             foreach (object ball in _logicApi.logicBalls)
             {

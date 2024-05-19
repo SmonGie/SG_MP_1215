@@ -54,7 +54,7 @@
                             <Ellipse Width="{Binding Diameter}" Height="{Binding Diameter}"
              Fill="BlueViolet" Stroke="Black" StrokeThickness="0">
                                 <Ellipse.RenderTransform>
-                                    <TranslateTransform X="{Binding X}" Y="{Binding Y}" />
+                                    <TranslateTransform X="{Binding PositionX}" Y="{Binding PositionY}" />
                                 </Ellipse.RenderTransform>
                             </Ellipse>
                         </DataTemplate>
@@ -62,8 +62,8 @@
                     </ItemsControl.ItemTemplate>
                     <ItemsControl.ItemContainerStyle>
                         <Style TargetType="{x:Type ContentPresenter}">
-                            <Setter Property="Canvas.Left" Value="{Binding X}" />
-                            <Setter Property="Canvas.Top" Value="{Binding Y}" />
+                            <Setter Property="Canvas.Left" Value="{Binding PositionX}" />
+                            <Setter Property="Canvas.Top" Value="{Binding PositionY}" />
                         </Style>
                     </ItemsControl.ItemContainerStyle>
                 </ItemsControl>

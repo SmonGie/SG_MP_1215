@@ -26,7 +26,7 @@ namespace ViewModel
             _execute();
         }
 
-        protected virtual void OnCanExecuteChange()
+        protected virtual void OnExecuteChange()
         {
             CanExecuteChanged?.Invoke(this, EventArgs.Empty);
         }

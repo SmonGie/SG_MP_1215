@@ -27,13 +27,25 @@ namespace Data
         public override AbstractBallApi SpawnBalls(bool isWorking)
         {
             int mass = 5;
-            int radius = 10;
+            int radius = 10;  
             Random random = new Random();
             int positionX = random.Next(10, Width - 10);
             int positionY = random.Next(10, Height - 10);
 
-            int velocityX = random.Next(-5, 5);
-            int velocityY = random.Next(-5, 5);
+            int varX = random.Next(-3, 4);
+            int varY = random.Next(-3, 4);
+
+            if (varX == 0)
+            {
+                varX = random.Next(1, 3) * 2 - 3;
+            }
+            if (varY == 0)
+            {
+                varY = random.Next(1, 3) * 2 - 3;
+            }
+
+            int velocityX = varX;
+            int velocityY = varY;
 
             Vector2 position = new Vector2(positionX, positionY);
 
