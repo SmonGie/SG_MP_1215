@@ -115,34 +115,41 @@ namespace Logic
         private void BallsCollision(IBall ball1)
         {
 
-
-            foreach (IBall ball2 in dataApi.Balls)
+            lock (collisionLock)
             {
-                if (ball1 != ball2)
+                for (int i = 0; i < dataApi.GetNumberOfBalls(); i++)
                 {
-
-                    // Calculate the distance between the centers of the balls
-                    float distance = Vector2.Distance(ball1.Position, ball2.Position);
-
-                    // Check if the balls are colliding
-                    if (distance <= ball1.Radius + ball2.Radius)
+                    IBall ball2 = dataApi.GetBall(i);
+                    if (ball2 != ball1)
                     {
-                        int v1x = ball1.VelocityX;
-                        int v1y = ball1.VelocityY;
-                        int v2x = ball2.VelocityX;
-                        int v2y = ball2.VelocityY;
 
-                        int newV1X = (ball1.Mass * ball1.VelocityX + ball2.Mass * ball2.VelocityX - ball2.Mass * (ball1.VelocityX - ball2.VelocityX)) / (ball1.Mass + ball2.Mass);
-                        int newV1Y = (ball1.Mass * ball1.VelocityY + ball2.Mass * ball2.VelocityY - ball2.Mass * (ball1.VelocityY - ball2.VelocityY)) / (ball1.Mass + ball2.Mass);
-                        int newV2X = (ball1.Mass * ball1.VelocityX + ball2.Mass * ball2.VelocityX - ball1.Mass * (ball2.VelocityX - ball1.VelocityY)) / (ball1.Mass + ball2.Mass);
-                        int newV2Y = (ball1.Mass * ball1.VelocityY + ball2.Mass * ball2.VelocityY - ball2.Mass * (ball2.VelocityY - ball1.VelocityY)) / (ball1.Mass + ball2.Mass);
+                        // Calculate the distance between the centers of the balls
+                        float distance = Vector2.Distance(ball1.Position, ball2.Position);
 
-                        ball1.setVelocity(newV1X, newV1Y);
-                        ball2.setVelocity(newV2X, newV2Y);
+                        // Check if the balls are colliding
+                        if (distance <= ball1.Radius + ball2.Radius)
+                        {
+                            Vector2 v1x = ball1.Velocity;
+                            Vector2 v1y = ball1.Velocity;
+                            Vector2 v2x = ball2.Velocity;
+                            Vector2 v2y = ball2.Velocity;
 
+                            Vector2 newV1X = (ball1.Mass * ball1.Velocity + ball2.Mass * ball2.Velocity - ball2.Mass * (ball1.Velocity - ball2.Velocity)) / (ball1.Mass + ball2.Mass);
+                            Vector2 newV1Y = (ball1.Mass * ball1.Velocity + ball2.Mass * ball2.Velocity - ball2.Mass * (ball1.Velocity - ball2.Velocity)) / (ball1.Mass + ball2.Mass);
+                            Vector2 newV2X = (ball1.Mass * ball1.Velocity + ball2.Mass * ball2.Velocity - ball1.Mass * (ball2.Velocity - ball1.Velocity)) / (ball1.Mass + ball2.Mass);
+                            Vector2 newV2Y = (ball1.Mass * ball1.Velocity + ball2.Mass * ball2.Velocity - ball2.Mass * (ball2.Velocity - ball1.Velocity)) / (ball1.Mass + ball2.Mass);
+
+                            ball1.Velocity(newV1Y);
+
+                            ball2.Velocity(newV2X, newV2Y);
+
+                        }
                     }
                 }
+
+
             }
+              
         }
 
 

@@ -66,6 +66,11 @@ namespace Data
         //  return AbstractBallApi.CreateInstance(position, velocityX, velocityY, mass, radius, isWorking);
     }
 
+        public override int GetNumberOfBalls()
+        {
+            return Balls.Count;
+        }
+
         public override IBall GetBall(int number)
         {
             return Balls[number];

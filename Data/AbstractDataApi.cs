@@ -17,5 +17,6 @@
             // Zwraca nową instancję klasy Data.
             return new Data(HeightOfWindow, WidthOfWindow);
         }
+        public abstract int GetNumberOfBalls();
     }
 }

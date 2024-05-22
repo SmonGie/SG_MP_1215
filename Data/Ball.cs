@@ -15,7 +15,9 @@ namespace Data
 
         Vector2 Position { get; }
         Vector2 Velocity { get; set; }
-       
+        int Radius { get; }
+        int Mass { get; }
+
     }
     internal class Ball : IBall
     {
@@ -25,13 +27,14 @@ namespace Data
         private Vector2 _velocity;
         private int MovingTime;
 
-
+        private const int _mass = 5;
+        private const int _radius = 5;
 
         private Stopwatch stopwatch = new Stopwatch();
 
-        public Ball(int x, int y,int Radius)
+        public Ball(int x, int y)
         {
-            Radius = 5;
+          //  Radius = 5;
             Random random = new Random();
             Position = new Vector2(x, y)
             {
@@ -51,6 +54,8 @@ namespace Data
 
             MoveBall();
         }
+
+
 
 
 
@@ -78,7 +83,15 @@ namespace Data
             }
         }
 
-        
+        public int Radius
+        {
+            get => _radius;
+        }
+
+        public int Mass
+        {
+            get => _mass;
+        }
 
         private void move(int MovingTime)
         {
