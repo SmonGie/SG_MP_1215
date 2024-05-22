@@ -10,156 +10,107 @@ using System.Threading.Tasks;
 
 namespace Data
 {
-    internal class Ball : AbstractBallApi, INotifyPropertyChanged
+    public interface IBall
     {
-        private Vector2 position;
-        private int Vx;
-        private int Vy;
-        private bool _isWorkingSim;
-        private readonly int mass;
-        private readonly int radius;
-        private static readonly SemaphoreSlim velocityLock = new SemaphoreSlim(1);
-        private static readonly SemaphoreSlim positionLock = new SemaphoreSlim(1);
+
+        Vector2 Position { get; }
+        Vector2 Velocity { get; }
+    }
+    internal class Ball : IBall
+    {
+        
+        private Vector2 _position;
+        private Vector2 _velocity;
+        private int MovingTime;
+
+
+
         private Stopwatch stopwatch = new Stopwatch();
 
-        public Ball(Vector2 position, int vx, int vy, int mass, int radius, bool _isWorkingSim)
+        public Ball(int x, int y)
         {
-            this.position = position;
-            Vx = vx;
-            Vy = vy;
-            isWorking = _isWorkingSim;
-            this.mass = mass;
-            this.radius = radius;
-            Task.Run(() => Move());
+
+            Random random = new Random();
+            Position = new Vector2(x, y)
+            {
+                X = x,
+                Y = y
+
+            };
+
+            Velocity = new Vector2(x, y)
+            {
+                X = random.Next()*2,
+                Y = random.Next() * 2
+
+            };
+
+            MoveBall();
         }
 
-        public override void AddPropertyChangedListener(PropertyChangedEventHandler handler)
+        public event EventHandler PositionChange;
+
+        internal void OnPositionChange()
         {
-            this.PropertyChanged += handler;
+            PositionChange?.Invoke(this, EventArgs.Empty);
+        }
+       
+
+        public Vector2 Position
+        {
+            get => _position;
+            private set { _position = value; }
         }
 
-        public override Vector2 Position
+        public Vector2 Velocity
         {
-            get
-            {
-                positionLock.Wait();
-                try
-                {
-                    return position;
-                }
-                finally { positionLock.Release(); }
-            }
-        }
-
-        public override int PositionX => (int)position.X;
-
-        public override int PositionY => (int)position.Y;
-
-        private void setPosition(Vector2 Pos)
-        {
-            positionLock.Wait();
-            try
-            {
-                position.X = Pos.X;
-                position.Y = Pos.Y;
-            }
-            finally
-            {
-                positionLock.Release();
-            }
-            OnPropertyChanged(nameof(PositionX));
-            OnPropertyChanged(nameof(PositionY));
-        }
-
-        public override int VelocityX
-        {
-            get
-            {
-                velocityLock.Wait();
-                try
-                {
-                    return Vx;
-                }
-                finally { velocityLock.Release(); }
-            }
-            set => Vx = value;
-        }
-
-        public override int VelocityY
-        {
-            get
-            {
-                velocityLock.Wait();
-                try
-                {
-                    return Vy;
-                }
-                finally { velocityLock.Release(); }
-            }
-            set => Vy = value;
-        }
-        public override void setVelocity(int Vx, int Vy)
-        {
-            velocityLock.Wait();
-            try
-            {
-                this.Vx = Vx;
-                this.Vy = Vy;
-            }
-            finally
-            {
-                velocityLock.Release();
-            }
-        }
-
-        public override int Mass => mass;
-        public override int Radius => radius;
-
-        private async Task Move()
-        {
-            while (true)
-            {
-                if (isWorking)
-                {
-                    stopwatch.Restart();
-
-                    positionLock.Wait();
-                    try
-                    {
-                        position.X += Vx;
-                        position.Y += Vy;
-                    }
-                    finally
-                    {
-                        positionLock.Release();
-                    }
-                    OnPropertyChanged(nameof(PositionX));
-                    OnPropertyChanged(nameof(PositionY));
-
-                    stopwatch.Stop();
-                    
-                }
-                double velocity = Math.Sqrt(Vx * Vx + Vy * Vy);
-                await Task.Delay(TimeSpan.FromMilliseconds(60));
-            }
-        }
-
-        public override bool isWorking
-        {
-            get { return _isWorkingSim; }
+            get { return _velocity; }
             set
             {
-                _isWorkingSim = value;
+                _velocity = value;
             }
         }
 
-        public override int Diameter => radius * 2;
+        
 
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        protected void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        private void move(int MovingTime)
         {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+            Vector2 newPosition = new Vector2((Velocity.X * MovingTime) + Position.X, (Velocity.Y * MovingTime) + Position.Y);
+            Position = newPosition;
+            OnPositionChange();
         }
+
+        private readonly object movelock = new object();
+
+        private void MoveBall()
+        {
+            Task.Run(async () =>
+            {
+                int wait = 0;
+                while (true)
+                {
+                    stopwatch.Restart();
+                    stopwatch.Start();
+                 
+                    lock (movelock)
+                    {
+                        move(MovingTime - (int)stopwatch.ElapsedMilliseconds);
+                    }
+                    stopwatch.Stop();
+                    if (MovingTime - stopwatch.ElapsedMilliseconds < 0)
+                    {
+                        wait = 0;
+                    }
+                    else
+                    {
+                        wait = MovingTime - (int)stopwatch.ElapsedMilliseconds;
+                    }
+
+                    await Task.Delay(wait);
+                }
+            });
+        }
+
+        
     }
 }
