@@ -14,10 +14,12 @@ namespace Data
     {
 
         Vector2 Position { get; }
-        Vector2 Velocity { get; }
+        Vector2 Velocity { get; set; }
+       
     }
     internal class Ball : IBall
     {
+
         
         private Vector2 _position;
         private Vector2 _velocity;
@@ -27,9 +29,9 @@ namespace Data
 
         private Stopwatch stopwatch = new Stopwatch();
 
-        public Ball(int x, int y)
+        public Ball(int x, int y,int Radius)
         {
-
+            Radius = 5;
             Random random = new Random();
             Position = new Vector2(x, y)
             {
@@ -45,8 +47,13 @@ namespace Data
 
             };
 
+            MovingTime = 1000;
+
             MoveBall();
         }
+
+
+
 
         public event EventHandler PositionChange;
 

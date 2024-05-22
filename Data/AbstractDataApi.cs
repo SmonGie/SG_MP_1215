@@ -7,8 +7,9 @@
         public abstract int getHeightOfWindow();
         public abstract int getWidthOfWindow();
 
-
-        public abstract AbstractBallApi SpawnBalls(bool isWorking);
+        public abstract event EventHandler BallEvent;
+        public abstract void SpawnBalls(int amount);
+        public abstract IBall GetBall(int number);
 
         // Zdefiniuj metodę statyczną, aby utworzyć wystąpienie klasy AbstractDataAPI.
         public static AbstractDataApi CreateInstance(int HeightOfWindow,int WidthOfWindow)

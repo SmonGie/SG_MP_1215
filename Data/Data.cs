@@ -8,6 +8,7 @@ namespace Data
     {
         private int Height;
         private int Width;
+        private List<IBall> Balls { get; }
 
         public override int getWidthOfWindow()
         {
@@ -20,36 +21,54 @@ namespace Data
         }
         public Data(int HeightOfWindow, int WidthOfWindow)
         {
+            Balls = new List<IBall>();
             Height = HeightOfWindow;
             Width = WidthOfWindow;
         }
 
-        public override AbstractBallApi SpawnBalls(bool isWorking)
+        public override event EventHandler BallEvent;
+
+        private void BallPositionChanged(object sender, EventArgs e)
         {
-            int mass = 5;
-            int radius = 10;  
+            if (sender != null)
+            {
+                BallEvent?.Invoke(sender, EventArgs.Empty);
+            }
+        }
+
+        public override void SpawnBalls(int amount)
+        {
+
+            int ballnumber = Balls.Count;
+
+
             Random random = new Random();
-            int positionX = random.Next(10, Width - 10);
-            int positionY = random.Next(10, Height - 10);
 
-            int varX = random.Next(-5, 5);
-            int varY = random.Next(-5, 5);
-
-            if (varX == 0)
+            int x;
+            int y;
+            for (int i = 0; i < amount; i++)
             {
-                varX = random.Next(1, 3) * 2 - 3;
+                x = random.Next(10, Width - 10);
+                y = random.Next(10, Height - 10);
+
+                Balls.Add(new Ball(x, y));
+
+                Ball ball = new Ball(random.Next(10, Width - 10), random.Next(10, Height - 10));
+                Balls.Add(ball);
+                ball.PositionChange += BallPositionChanged;
+
             }
-            if (varY == 0)
-            {
-                varY = random.Next(1, 3) * 2 - 3;
-            }
 
-            int velocityX = varX;
-            int velocityY = varY;
 
-            Vector2 position = new Vector2(positionX, positionY);
 
-            return AbstractBallApi.CreateInstance(position, velocityX, velocityY, mass, radius, isWorking);
+
+
+        //  return AbstractBallApi.CreateInstance(position, velocityX, velocityY, mass, radius, isWorking);
+    }
+
+        public override IBall GetBall(int number)
+        {
+            return Balls[number];
         }
     }
 }
