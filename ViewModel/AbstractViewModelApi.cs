@@ -1,33 +1,26 @@
 ﻿using Model;
 using System.Collections.ObjectModel;
-using System.ComponentModel;
-using System.Runtime.CompilerServices;
 using System.Windows.Input;
 
 namespace ViewModel
 {
-    public abstract class AbstractViewModelApi : INotifyPropertyChanged
+    public class ViewModel
     {
+        private AbstractModelApi ModelApi { get; set; }
+        public ObservableCollection<BallModel> Balls { get; }
+        public int NumberOfBalls { get; set; }
+        public ICommand AddCommand { get; set; }
 
-        public abstract ICommand StartCommand { get; }
-        public abstract ICommand StopCommand { get; }
-        public abstract ICommand SpawnBallCommand { get; }
-        public abstract void StartSim();
-        public abstract void StopSim();
-        public abstract void SpawnBall();
-        public abstract ObservableCollection<object>? GetBalls();
-        public abstract ObservableCollection<object>? Balls{get; set; }
-
-    public static AbstractViewModelApi CreateInstance(int windowHeight, int windowWidth)
+        public ViewModel()
         {
-            return new ViewModel(windowHeight, windowWidth);
+            ModelApi = AbstractModelApi.CreateInstance();
+            AddCommand = new RelayCommand(AddBalls);
+            Balls = ModelApi.Balls();
         }
 
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        protected void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        public void AddBalls()
         {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+            ModelApi.SpawnBall(NumberOfBalls);
         }
     }
 }

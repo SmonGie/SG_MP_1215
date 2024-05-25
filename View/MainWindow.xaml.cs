@@ -8,10 +8,6 @@ namespace View
         public MainWindow()
         {
             InitializeComponent();
-            
-            AbstractViewModelApi viewModel = AbstractViewModelApi.CreateInstance(150,305);
-
-            DataContext = viewModel;
         }
     }
 }

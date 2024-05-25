@@ -1,24 +1,22 @@
 ﻿using Data;
+using System.Numerics;
 
 namespace Logic
 {
     public abstract class AbstractLogicApi
     {
-        public abstract int BoardWidth {  get; }
-        public abstract int BoardHeight { get; }
-
-       
+        public abstract Vector2 GetBallPosition(int number);
+        public abstract int GetNumberOfBalls();
         public abstract void SpawnBalls(int amount);
 
         public abstract event EventHandler LogicEvent;
 
-        public abstract List<IBall> logicBalls { get; }
 
-        public static AbstractLogicApi CreateInstance(int boardWidth, int boardHeight, AbstractDataApi DataInformation)
+        public static AbstractLogicApi CreateInstance(AbstractDataApi DataInformation)
         {
             if (DataInformation == null)
             {
-                return new logicBall(AbstractDataApi.CreateInstance(boardHeight, boardWidth));
+                return new logicBall(AbstractDataApi.CreateInstance());
             }
             else
             {

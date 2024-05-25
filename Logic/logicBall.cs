@@ -1,61 +1,50 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using System.Numerics;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
+﻿using System.Numerics;
 using Data;
 
 namespace Logic
 {
     internal class logicBall : AbstractLogicApi
     {   
-        public override int BoardHeight { get; }
-        public override int BoardWidth { get; }
-
-        public override List<IBall> logicBalls { get; }
         private AbstractDataApi dataApi;
 
         public logicBall(AbstractDataApi dataApi)
         {
-            logicBalls = new List<IBall>();
+            dataApi.BallEvent += CheckCollisions;
             this.dataApi = dataApi;
-            this.BoardHeight = dataApi.getHeightOfWindow();
-            this.BoardWidth = dataApi.getWidthOfWindow();
         }
 
+        public override int GetNumberOfBalls()
+        {
+            return dataApi.GetNumberOfBalls();
+        }
+
+        public override Vector2 GetBallPosition(int number)
+        {
+            return dataApi.GetBallPosition(number);
+        }
 
 
         private void BoardCollision(IBall ball)
         {
-            
-                Vector2 velocity = ball.Velocity;
+            Vector2 newSpeed = ball.Velocity;
+            if (ball.Position.X <= 0)
+            {
+                newSpeed.X = Math.Abs(ball.Velocity.X);
+            }
+            if (ball.Position.Y <= 0)
+            {
+                newSpeed.Y = Math.Abs(ball.Velocity.Y);
+            }
 
-                if (ball.Position.X  <= 0)
-                {
-                    velocity.X = ball.Velocity.X;
-                    
-                }
-
-                if (ball.Position.Y <= 0)
-                {
-                    velocity.Y = -ball.Velocity.Y;
-                }
-
-                if (ball.Position.X + ball.Radius >= dataApi.getWidthOfWindow())
-                {
-                    velocity.X = -ball.Velocity.X;
-                }
-                if (ball.Position.Y + ball.Radius > dataApi.getHeightOfWindow())
-                {
-                    velocity.Y = -ball.Velocity.Y;
-                }
-
-            ball.Velocity = velocity;
-
-
+            if (ball.Position.X + ball.Radius >= dataApi.Width)
+            {
+                newSpeed.X = -Math.Abs(ball.Velocity.X);
+            }
+            if (ball.Position.Y + ball.Radius > dataApi.Height)
+            {
+                newSpeed.Y = -Math.Abs(ball.Velocity.Y);
+            }
+            ball.Velocity = newSpeed;
         }
 
 
@@ -112,20 +101,18 @@ namespace Logic
         {
             IBall ball = (IBall)sender;
             
-                lock (collisionLock)
-                {
-                    if (sender != null)
+                
+                    if (ball != null)
                     {
-                       
+
 
                         BoardCollision(ball);
-
-                    BallsCollision(ball);
+                        BallsCollision(ball);
                     
 
-                        LogicEvent?.Invoke(sender, EventArgs.Empty);
+                        LogicEvent?.Invoke(this, EventArgs.Empty);
                     }
-                }
+                
 
             
         }

@@ -1,33 +1,47 @@
 ﻿using Logic;
 using Data;
 using System.Collections.ObjectModel;
+using System.Numerics;
 
 namespace Model
 {
     internal class Model : AbstractModelApi
     {
-        private AbstractLogicApi _logicApi;
-
-        public Model(AbstractLogicApi logicApi)
+        private readonly ObservableCollection<BallModel> _balls;
+        public Model()
         {
-            _logicApi = logicApi;
+            _balls = new ObservableCollection<BallModel>();
+            _logicApi = AbstractLogicApi.CreateInstance(null);
+            _logicApi.LogicEvent += (sender, args) => LogicApiEventHandler();
         }
 
-        public override ObservableCollection<object>? GetBalls()
+        public override ObservableCollection<BallModel> Balls()
         {
-            ObservableCollection<object>? _balls = new ObservableCollection<object>();
-
-            foreach (object ball in _logicApi.logicBalls)
-            {
-                _balls.Add(ball);
-            }
-
             return _balls;
         }
 
-        public override void SpawnBall()
+        public override void SpawnBall(int number)
         {
-            _logicApi.SpawnBalls();
+            _logicApi.SpawnBalls(number);
+            for (int i = 0; i < number; i++)
+            {
+                Vector2 position = _logicApi.GetBallPosition(i);
+                BallModel model = new BallModel(position.X, position.Y);
+                _balls.Add(model);
+            }
+        }
+
+        private void LogicApiEventHandler()
+        {
+            for (int i = 0; i < _logicApi.GetNumberOfBalls(); i++)
+            {
+                if (_logicApi.GetNumberOfBalls() == _balls.Count)
+                {
+                    Vector2 position = _logicApi.GetBallPosition(i);
+                    _balls[i].X = position.X;
+                    _balls[i].Y = position.Y;
+                }
+            }
         }
 
     }

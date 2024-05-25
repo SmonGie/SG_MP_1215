@@ -1,12 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.Numerics;
-using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace Data
 {
@@ -27,30 +20,24 @@ namespace Data
         private Vector2 _velocity;
         private int MovingTime;
 
-        private const int _mass = 5;
-        private const int _radius = 5;
+        private const int _mass = 15;
+        private const int _radius = 40;
 
         private Stopwatch stopwatch = new Stopwatch();
 
         public Ball(int x, int y)
         {
-          //  Radius = 5;
             Random random = new Random();
-            Position = new Vector2(x, y)
+            _position = new Vector2(x, y);
+
+            // Initialize velocity with distinct random values
+            _velocity = new Vector2(random.Next(-3, 3), random.Next(-3, 3));
+            while (_velocity.X == 0 || _velocity.Y == 0) // Ensure non-zero velocity
             {
-                X = x,
-                Y = y
+                _velocity = new Vector2(random.Next(-3, 3), random.Next(-3, 3));
+            }
 
-            };
-
-            Velocity = new Vector2(x, y)
-            {
-                X = random.Next()*2,
-                Y = random.Next() * 2
-
-            };
-
-            MovingTime = 1000;
+            MovingTime = 200;
 
             MoveBall();
         }
@@ -71,7 +58,10 @@ namespace Data
         public Vector2 Position
         {
             get => _position;
-            private set { _position = value; }
+            private set
+            {
+                _position = value;
+            }
         }
 
         public Vector2 Velocity
@@ -93,14 +83,16 @@ namespace Data
             get => _mass;
         }
 
-        private void move(int MovingTime)
-        {
-            Vector2 newPosition = new Vector2((Velocity.X * MovingTime) + Position.X, (Velocity.Y * MovingTime) + Position.Y);
-            Position = newPosition;
-            OnPositionChange();
-        }
-
         private readonly object movelock = new object();
+
+        public void move()
+        {
+            lock (movelock)
+            {
+                Position += Velocity * MovingTime*0.1f;
+                OnPositionChange();
+            }
+        }
 
         private void MoveBall()
         {
@@ -112,10 +104,7 @@ namespace Data
                     stopwatch.Restart();
                     stopwatch.Start();
                  
-                    lock (movelock)
-                    {
-                        move(MovingTime - (int)stopwatch.ElapsedMilliseconds);
-                    }
+                    move();
                     stopwatch.Stop();
                     if (MovingTime - stopwatch.ElapsedMilliseconds < 0)
                     {

@@ -6,24 +6,15 @@ namespace Data
     //Definicja klasy Data jako wewnetrzenj i podklasy AbstractDataApi
     internal class Data : AbstractDataApi
     {
-        private int Height;
-        private int Width;
+        public override int Width { get; }
+        public override int Height { get; }
         private List<IBall> Balls { get; }
 
-        public override int getWidthOfWindow()
-        {
-            return Width;
-        }
-
-        public override int getHeightOfWindow()
-        {
-            return Height;
-        }
-        public Data(int HeightOfWindow, int WidthOfWindow)
+        public Data()
         {
             Balls = new List<IBall>();
-            Height = HeightOfWindow;
-            Width = WidthOfWindow;
+            Width = 600;
+            Height = 600;
         }
 
         public override event EventHandler BallEvent;
@@ -36,6 +27,11 @@ namespace Data
             }
         }
 
+        public override Vector2 GetBallPosition(int number)
+        {
+            return Balls[number].Position;
+        }
+
         public override void SpawnBalls(int amount)
         {
 
@@ -43,27 +39,14 @@ namespace Data
 
 
             Random random = new Random();
-
-            int x;
-            int y;
             for (int i = 0; i < amount; i++)
             {
-                x = random.Next(10, Width - 10);
-                y = random.Next(10, Height - 10);
-
-                Balls.Add(new Ball(x, y));
-
-                Ball ball = new Ball(random.Next(10, Width - 10), random.Next(10, Height - 10));
+                Ball ball = new Ball(random.Next(100,Width-100), random.Next(Height-100));
                 Balls.Add(ball);
                 ball.PositionChange += BallPositionChanged;
 
             }
 
-
-
-
-
-        //  return AbstractBallApi.CreateInstance(position, velocityX, velocityY, mass, radius, isWorking);
     }
 
         public override int GetNumberOfBalls()
