@@ -7,8 +7,6 @@ namespace Model
 {
     public abstract class AbstractModelApi
     {
-        public abstract void StartSimulation();
-        public abstract void StopSimulation();
         public abstract void SpawnBall();
         public abstract ObservableCollection<object>? GetBalls();
 

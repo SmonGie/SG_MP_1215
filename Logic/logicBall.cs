@@ -12,8 +12,6 @@ namespace Logic
 {
     internal class logicBall : AbstractLogicApi
     {   
-        // private static readonly SemaphoreSlim _lock = new SemaphoreSlim(1);
-        private static readonly ReaderWriterLockSlim readerWriterLockSlim = new ReaderWriterLockSlim();
         public override int BoardHeight { get; }
         public override int BoardWidth { get; }
 
@@ -28,86 +26,36 @@ namespace Logic
             this.BoardWidth = dataApi.getWidthOfWindow();
         }
 
-/*        public override void StartSimulation()
-        {
-            foreach (var ball in logicBalls)
-            {
-                ball.isWorking = true;
-            }
-        }
 
-        public override void StopSimulation()
-        {
-            foreach (var ball in logicBalls)
-            {
-                ball.isWorking = false;
-            }
-        }*/
-
-       
-
-       /* public override int GetPositionX(int id)
-        {
-            if (id >= 0 && id < logicBalls.Count)
-            {
-                return (int)logicBalls[id].Position.Y;
-            }
-            else
-            {
-                return 0;
-            }
-        }
-
-        public override int GetPositionY(int id)
-        {
-            if (id >= 0 && id < logicBalls.Count)
-            {
-                return (int)logicBalls[id].Position.X;
-            }
-            else
-            {
-                return 0;
-            }
-        }*/
 
         private void BoardCollision(IBall ball)
         {
-            readerWriterLockSlim.EnterWriteLock();
-            try
-            {
-                int VelocityX = ball.VelocityX;
-                int VelocityY = ball.VelocityY;
-                Vector2 position = ball.Position;
+            
+                Vector2 velocity = ball.Velocity;
 
-                // Perform collision detection
-                bool positionChanged = false;
-                if (position.X + ball.VelocityX < 0 || position.X + ball.VelocityX >= BoardWidth)
+                if (ball.Position.X  <= 0)
                 {
-                    VelocityX = -ball.VelocityX;
-                    positionChanged = true;
+                    velocity.X = ball.Velocity.X;
+                    
                 }
 
-                if (position.Y + ball.VelocityY < 0 || position.Y + ball.VelocityY >= BoardHeight)
+                if (ball.Position.Y <= 0)
                 {
-                    VelocityY = -ball.VelocityY;
-                    positionChanged = true;
+                    velocity.Y = -ball.Velocity.Y;
                 }
 
-                // Update velocity if position changed
-                if (positionChanged)
+                if (ball.Position.X + ball.Radius >= dataApi.getWidthOfWindow())
                 {
-                    ball.setVelocity(VelocityX, VelocityY);
+                    velocity.X = -ball.Velocity.X;
                 }
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Exception occurred in BoardCollision: {ex.Message}");
-                // Handle the exception or log it as needed
-            }
-            finally
-            {
-                readerWriterLockSlim.ExitWriteLock();
-            }
+                if (ball.Position.Y + ball.Radius > dataApi.getHeightOfWindow())
+                {
+                    velocity.Y = -ball.Velocity.Y;
+                }
+
+            ball.Velocity = velocity;
+
+
         }
 
 
@@ -129,19 +77,22 @@ namespace Logic
                         // Check if the balls are colliding
                         if (distance <= ball1.Radius + ball2.Radius)
                         {
-                            Vector2 v1x = ball1.Velocity;
-                            Vector2 v1y = ball1.Velocity;
-                            Vector2 v2x = ball2.Velocity;
-                            Vector2 v2y = ball2.Velocity;
+                            Vector2 v1 = ball1.Velocity;
+                            Vector2 v2 = ball2.Velocity;
+                            Vector2 p1 = ball1.Position;
+                            Vector2 p2 = ball2.Position;
+                            float m1 = ball1.Mass;
+                            float m2 = ball2.Mass;
 
-                            Vector2 newV1X = (ball1.Mass * ball1.Velocity + ball2.Mass * ball2.Velocity - ball2.Mass * (ball1.Velocity - ball2.Velocity)) / (ball1.Mass + ball2.Mass);
-                            Vector2 newV1Y = (ball1.Mass * ball1.Velocity + ball2.Mass * ball2.Velocity - ball2.Mass * (ball1.Velocity - ball2.Velocity)) / (ball1.Mass + ball2.Mass);
-                            Vector2 newV2X = (ball1.Mass * ball1.Velocity + ball2.Mass * ball2.Velocity - ball1.Mass * (ball2.Velocity - ball1.Velocity)) / (ball1.Mass + ball2.Mass);
-                            Vector2 newV2Y = (ball1.Mass * ball1.Velocity + ball2.Mass * ball2.Velocity - ball2.Mass * (ball2.Velocity - ball1.Velocity)) / (ball1.Mass + ball2.Mass);
+                            Vector2 deltaP = p1 - p2;
+                            float d = deltaP.Length();
+                            Vector2 deltaV = v1 - v2;
 
-                            ball1.Velocity(newV1Y);
+                            float a = Vector2.Dot(deltaV, deltaP) / (d * d);
+                            Vector2 impact = a * deltaP;
 
-                            ball2.Velocity(newV2X, newV2Y);
+                            ball1.Velocity -= impact * (2 * m2 / (m1 + m2));
+                            ball2.Velocity += impact * (2 * m1 / (m1 + m2));
 
                         }
                     }

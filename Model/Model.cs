@@ -30,14 +30,5 @@ namespace Model
             _logicApi.SpawnBalls();
         }
 
-        public override void StartSimulation()
-        {
-            _logicApi.StartSimulation();
-        }
-
-        public override void StopSimulation()
-        {
-            _logicApi.StopSimulation();
-        }
     }
 }
