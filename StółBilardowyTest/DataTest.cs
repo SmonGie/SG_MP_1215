@@ -1,4 +1,5 @@
 using NUnit.Framework;
+using Moq;
 using System.Numerics;
 
 namespace Data.Tests
@@ -6,61 +7,45 @@ namespace Data.Tests
     [TestFixture]
     public class DataTest
     {
-        private AbstractBallApi ball;
+        private Mock<AbstractDataApi> mockData;
+        private AbstractDataApi mockApi;
 
         [SetUp]
         public void Setup()
         {
-            Vector2 position = new Vector2(2, 2);
-            int deltaX = 1;
-            int deltaY = 1;
-            int size = 10;
-            int mass = 5;
-            bool isSimulationRunning = false;
+            mockData = new Mock<AbstractDataApi>();
+            mockApi = mockData.Object;
+        }
 
-            ball = AbstractBallApi.CreateInstance(position, deltaX, deltaY, size, mass, isSimulationRunning);
+
+        [Test]
+        public void GetNumberOfBalls_ReturnsCorrectNumber()
+        {
+            // Arrange
+            int expectedNumberOfBalls = 5;
+            mockData.Setup(d => d.GetNumberOfBalls()).Returns(expectedNumberOfBalls); // Setup mock to return the expected number of balls
+
+            // Act
+            int actualNumberOfBalls = mockApi.GetNumberOfBalls(); // Call the method to get number of balls using mockApi
+
+            // Assert
+            Assert.AreEqual(expectedNumberOfBalls, actualNumberOfBalls); // Check if numbers match
         }
 
         [Test]
-        public void BallAPI_PositionTest()
+        public void SpawnBalls_AddsBalls()
         {
-            Vector2 position = new Vector2(2, 2);
+            // Arrange
+            int initialNumberOfBalls = 0;
+            int amount = 3;
+            mockData.Setup(d => d.GetNumberOfBalls()).Returns(initialNumberOfBalls); // Setup mock to return initial number of balls
 
-            var excpectedPosition = ball.Position;
+            // Act
+            mockApi.SpawnBalls(amount); // Call the method to spawn balls using mockApi
 
-            Assert.AreEqual(excpectedPosition, position);
-        }
-
-        // Add other test methods...
-    }
-
-    [TestFixture]
-    public class DataAPITest
-    {
-        private AbstractDataApi data;
-
-        [SetUp]
-        public void Setup()
-        {
-            int boardWidth = 500;
-            int boardHeight = 400;
-            data = AbstractDataApi.CreateInstance(boardHeight, boardWidth);
-        }
-
-        [Test]
-        public void DataAPI_getBoardWidth()
-        {
-            int expectedValue = data.getWidthOfWindow();
-
-            Assert.AreEqual(expectedValue, 500);
-        }
-
-        [Test]
-        public void DataAPI_getBoardHeight()
-        {
-            int expectedValue = data.getHeightOfWindow();
-
-            Assert.AreEqual(expectedValue, 400);
+            // Assert
+            mockData.Verify(d => d.GetNumberOfBalls(), Times.Exactly(0)); 
+            mockData.Verify(d => d.SpawnBalls(amount), Times.Once); 
         }
     }
 }

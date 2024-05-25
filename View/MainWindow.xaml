@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:View"
         xmlns:vm="clr-namespace:ViewModel;assembly=ViewModel"
         mc:Ignorable="d"
-        Title="Balls" Height="650" Width="750">
+        Title="Balls" Height="800" Width="750">
     <Window.DataContext>
         <vm:ViewModel/>
     </Window.DataContext>
@@ -14,7 +14,7 @@
         <ItemsControl ItemsSource="{Binding Balls}">
             <ItemsControl.ItemsPanel>
                 <ItemsPanelTemplate>
-                    <Canvas Background="Green" Width="600" Height="600" Margin="0, 0, 0, 80"/>
+                    <Canvas Background="Green" Width="600" Height="600" Margin="0, 0, 0, 0"/>
                 </ItemsPanelTemplate>
             </ItemsControl.ItemsPanel>
             <ItemsControl.ItemContainerStyle>
@@ -30,7 +30,7 @@
                 </DataTemplate>
             </ItemsControl.ItemTemplate>
         </ItemsControl>
-        <TextBox Text="{Binding NumberOfBalls}" Margin="0, 480, 0, 0" Width="200" Height="20"/>
-        <Button Width="100" Height="20" Margin="0, 550, 0, 0" Command="{Binding AddCommand}">Dodaj</Button>
+        <TextBox Text="{Binding NumberOfBalls}" Margin="275,754,275,10" Width="200" Height="20"/>
+        <Button Width="100" Height="20" Margin="150,754,500,10" Command="{Binding StartCommand}">Dodaj</Button>
     </Grid>
 </Window>

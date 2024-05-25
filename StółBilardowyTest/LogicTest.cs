@@ -1,65 +1,106 @@
 ﻿using NUnit.Framework;
-using System.Collections.Generic;
-using Data;
 using Moq;
+using System.Numerics;
+using Data;
+using Logic;
 
 namespace Logic.Tests
 {
     [TestFixture]
     public class LogicBallTests
     {
-        private AbstractLogicApi logicBall;
-        private Mock<AbstractDataApi> dataApiMock;
+        private logicBall logic;
+        private FakeDataApi fakeDataApi;
 
         [SetUp]
         public void Setup()
         {
-            dataApiMock = new Mock<AbstractDataApi>();
-            logicBall = new logicBall(dataApiMock.Object);
+            fakeDataApi = new FakeDataApi();
+            logic = new logicBall(fakeDataApi);
         }
 
         [Test]
-        public void SpawnBalls_SpawnsBall()
+        public void GetNumberOfBalls_ReturnsCorrectNumber()
         {
             // Arrange
-            var ballMock = new Mock<AbstractBallApi>();
-            dataApiMock.Setup(x => x.SpawnBalls(true)).Returns(ballMock.Object);
+            int expectedNumberOfBalls = 5;
+            fakeDataApi.SpawnBalls(expectedNumberOfBalls);
 
             // Act
-            logicBall.SpawnBalls();
+            int actualNumberOfBalls = logic.GetNumberOfBalls();
 
             // Assert
-            Assert.Contains(ballMock.Object, logicBall.logicBalls);
+            Assert.AreEqual(expectedNumberOfBalls, actualNumberOfBalls);
         }
 
-        [Test]
-        public void GetPositionX_ReturnsCorrectValue()
+    }
+
+    public class FakeDataApi : AbstractDataApi
+    {
+        private List<IBall> Balls { get; }
+
+        public FakeDataApi()
         {
-            // Arrange
-            var ballMock = new Mock<AbstractBallApi>();
-            ballMock.Setup(x => x.Position).Returns(new System.Numerics.Vector2(10, 20));
-            logicBall.logicBalls.Add(ballMock.Object);
-
-            // Act
-            var positionX = logicBall.GetPositionX(0);
-
-            // Assert
-            Assert.AreEqual(20, positionX);
+            Balls = new List<IBall>();
         }
 
-        [Test]
-        public void GetPositionY_ReturnsCorrectValue()
+        public override event EventHandler BallEvent
         {
-            // Arrange
-            var ballMock = new Mock<AbstractBallApi>();
-            ballMock.Setup(x => x.Position).Returns(new System.Numerics.Vector2(10, 20));
-            logicBall.logicBalls.Add(ballMock.Object);
+            add { }
+            remove { }
+        }
 
-            // Act
-            var positionY = logicBall.GetPositionY(0);
+        public override int Width => 600;
 
-            // Assert
-            Assert.AreEqual(10, positionY);
+        public override int Height => 600;
+
+        public override int GetNumberOfBalls()
+        {
+            return Balls.Count;
+        }
+
+        public override Vector2 GetBallPosition(int number)
+        {
+            if (number < 0 || number >= Balls.Count)
+            {
+                throw new ArgumentOutOfRangeException(nameof(number));
+            }
+
+            return Balls[number].Position;
+        }
+
+        public override void SpawnBalls(int amount)
+        {
+            Random random = new Random();
+            for (int i = 0; i < amount; i++)
+            {
+                IBall ball = new FakeBall(new Vector2(random.Next(100, Width - 100), random.Next(100, Height - 100)));
+                Balls.Add(ball);
+            }
+        }
+
+        public override IBall GetBall(int number)
+        {
+            if (number < 0 || number >= Balls.Count)
+            {
+                throw new ArgumentOutOfRangeException(nameof(number));
+            }
+
+            return Balls[number];
+        }
+
+        private class FakeBall : IBall
+        {
+            public Vector2 Position { get; }
+            public Vector2 Velocity { get; set; }
+            public float Mass { get; }
+
+            public FakeBall(Vector2 position)
+            {
+                Position = position;
+                Velocity = Vector2.Zero;
+                Mass = 1.0f;
+            }
         }
     }
 }

@@ -36,11 +36,11 @@ namespace Logic
                 newSpeed.Y = Math.Abs(ball.Velocity.Y);
             }
 
-            if (ball.Position.X + ball.Radius >= dataApi.Width)
+            if (ball.Position.X + IBall.Radius >= dataApi.Width)
             {
                 newSpeed.X = -Math.Abs(ball.Velocity.X);
             }
-            if (ball.Position.Y + ball.Radius > dataApi.Height)
+            if (ball.Position.Y + IBall.Radius > dataApi.Height)
             {
                 newSpeed.Y = -Math.Abs(ball.Velocity.Y);
             }
@@ -49,47 +49,34 @@ namespace Logic
 
 
 
-        private void BallsCollision(IBall ball1)
+        private void BallsCollision(IBall ball)
         {
-
-            lock (collisionLock)
+            for (int i = 0; i < dataApi.GetNumberOfBalls(); i++)
             {
-                for (int i = 0; i < dataApi.GetNumberOfBalls(); i++)
+                IBall ball2 = dataApi.GetBall(i);
+                if (ball2 != ball)
                 {
-                    IBall ball2 = dataApi.GetBall(i);
-                    if (ball2 != ball1)
+                    double distancex = ball2.Position.X - ball.Position.X;
+                    double distancey = ball2.Position.Y - ball.Position.Y;
+                    double distance = Math.Sqrt(distancex * distancex + distancey * distancey);
+                    if (distance <= IBall.Radius+IBall.Radius)
                     {
+                        Vector2 collisionNormal = Vector2.Normalize(ball.Position -ball2.Position);
+                        Vector2 relativeVelocity = ball.Velocity - ball2.Velocity;
 
-                        // Calculate the distance between the centers of the balls
-                        float distance = Vector2.Distance(ball1.Position, ball2.Position);
+                        float velocityAlongNormal = Vector2.Dot(relativeVelocity, collisionNormal);
 
-                        // Check if the balls are colliding
-                        if (distance <= ball1.Radius + ball2.Radius)
-                        {
-                            Vector2 v1 = ball1.Velocity;
-                            Vector2 v2 = ball2.Velocity;
-                            Vector2 p1 = ball1.Position;
-                            Vector2 p2 = ball2.Position;
-                            float m1 = ball1.Mass;
-                            float m2 = ball2.Mass;
+                        if (velocityAlongNormal > 0)
+                            return;
 
-                            Vector2 deltaP = p1 - p2;
-                            float d = deltaP.Length();
-                            Vector2 deltaV = v1 - v2;
+                        float impulseScalar = -(2 * velocityAlongNormal) / (IBall.Mass + IBall.Mass);
+                        Vector2 impulse = impulseScalar * collisionNormal;
 
-                            float a = Vector2.Dot(deltaV, deltaP) / (d * d);
-                            Vector2 impact = a * deltaP;
-
-                            ball1.Velocity -= impact * (2 * m2 / (m1 + m2));
-                            ball2.Velocity += impact * (2 * m1 / (m1 + m2));
-
-                        }
+                        ball.Velocity -= impulse * (IBall.Mass / (IBall.Mass + IBall.Mass));
+                        ball2.Velocity += impulse * (IBall.Mass / (IBall.Mass + IBall.Mass));
                     }
                 }
-
-
             }
-              
         }
 
 
@@ -99,22 +86,20 @@ namespace Logic
 
         private void CheckCollisions(Object sender, EventArgs e)
         {
-            IBall ball = (IBall)sender;
-            
-                
-                    if (ball != null)
-                    {
+            lock (collisionLock)
+            {
+                IBall ball = (IBall)sender;
 
 
-                        BoardCollision(ball);
-                        BallsCollision(ball);
-                    
+                if (sender != null)
+                {
+                    BoardCollision(ball);
+                    BallsCollision(ball);
+                    LogicEvent?.Invoke(sender, EventArgs.Empty);
+                }
 
-                        LogicEvent?.Invoke(this, EventArgs.Empty);
-                    }
-                
+            }
 
-            
         }
 
 

@@ -8,8 +8,8 @@ namespace Data
 
         Vector2 Position { get; }
         Vector2 Velocity { get; set; }
-        int Radius { get; }
-        int Mass { get; }
+        const int Radius = 50;
+        const int Mass = 15;
 
     }
     internal class Ball : IBall
@@ -18,10 +18,7 @@ namespace Data
         
         private Vector2 _position;
         private Vector2 _velocity;
-        private int MovingTime;
-
-        private const int _mass = 15;
-        private const int _radius = 40;
+        private int _MovingTime;
 
         private Stopwatch stopwatch = new Stopwatch();
 
@@ -30,11 +27,10 @@ namespace Data
             Random random = new Random();
             _position = new Vector2(x, y);
 
-            // Initialize velocity with distinct random values
-            _velocity = new Vector2(random.Next(-3, 3), random.Next(-3, 3));
-            while (_velocity.X == 0 || _velocity.Y == 0) // Ensure non-zero velocity
+            _velocity = new Vector2(random.Next(-2, 2), random.Next(-2, 2));
+            while (_velocity.X == 0 || _velocity.Y == 0) 
             {
-                _velocity = new Vector2(random.Next(-3, 3), random.Next(-3, 3));
+                _velocity = new Vector2(random.Next(-2, 2), random.Next(-2, 2));
             }
 
             MovingTime = 200;
@@ -73,16 +69,6 @@ namespace Data
             }
         }
 
-        public int Radius
-        {
-            get => _radius;
-        }
-
-        public int Mass
-        {
-            get => _mass;
-        }
-
         private readonly object movelock = new object();
 
         public void move()
@@ -91,6 +77,15 @@ namespace Data
             {
                 Position += Velocity * MovingTime*0.1f;
                 OnPositionChange();
+            }
+        }
+
+        private int MovingTime
+        {
+            get => _MovingTime;
+            set
+            {
+                _MovingTime = value;
             }
         }
 
