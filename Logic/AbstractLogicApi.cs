@@ -11,7 +11,6 @@ namespace Logic
 
         public abstract event EventHandler LogicEvent;
 
-
         public static AbstractLogicApi CreateInstance(AbstractDataApi DataInformation)
         {
             if (DataInformation == null)

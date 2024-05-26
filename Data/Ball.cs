@@ -9,7 +9,7 @@ namespace Data
         Vector2 Position { get; }
         Vector2 Velocity { get; set; }
         const int Radius = 50;
-        const int Mass = 15;
+        const int Mass = 5;
 
     }
     internal class Ball : IBall
@@ -27,13 +27,13 @@ namespace Data
             Random random = new Random();
             _position = new Vector2(x, y);
 
-            _velocity = new Vector2(random.Next(-2, 2), random.Next(-2, 2));
+            _velocity = new Vector2(random.Next(-4, 4), random.Next(-4, 4));
             while (_velocity.X == 0 || _velocity.Y == 0) 
             {
-                _velocity = new Vector2(random.Next(-2, 2), random.Next(-2, 2));
+                _velocity = new Vector2(random.Next(-4, 4), random.Next(-4, 4));
             }
 
-            MovingTime = 200;
+            MovingTime = 1;
 
             MoveBall();
         }

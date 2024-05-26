@@ -1,11 +1,12 @@
-﻿using System.Numerics;
+﻿using System;
+using System.Numerics;
 using Data;
 
 namespace Logic
 {
     internal class logicBall : AbstractLogicApi
-    {   
-        private AbstractDataApi dataApi;
+    {
+        private readonly AbstractDataApi dataApi;
 
         public logicBall(AbstractDataApi dataApi)
         {
@@ -23,31 +24,22 @@ namespace Logic
             return dataApi.GetBallPosition(number);
         }
 
-
         private void BoardCollision(IBall ball)
         {
-            Vector2 newSpeed = ball.Velocity;
-            if (ball.Position.X <= 0)
+            Vector2 newVelocity = ball.Velocity;
+
+            if (ball.Position.X <= 0 || ball.Position.X + IBall.Radius >= dataApi.Width)
             {
-                newSpeed.X = Math.Abs(ball.Velocity.X);
-            }
-            if (ball.Position.Y <= 0)
-            {
-                newSpeed.Y = Math.Abs(ball.Velocity.Y);
+                newVelocity.X = -newVelocity.X;
             }
 
-            if (ball.Position.X + IBall.Radius >= dataApi.Width)
+            if (ball.Position.Y <= 0 || ball.Position.Y + IBall.Radius >= dataApi.Height)
             {
-                newSpeed.X = -Math.Abs(ball.Velocity.X);
+                newVelocity.Y = -newVelocity.Y;
             }
-            if (ball.Position.Y + IBall.Radius > dataApi.Height)
-            {
-                newSpeed.Y = -Math.Abs(ball.Velocity.Y);
-            }
-            ball.Velocity = newSpeed;
+
+            ball.Velocity = newVelocity;
         }
-
-
 
         private void BallsCollision(IBall ball)
         {
@@ -56,59 +48,53 @@ namespace Logic
                 IBall ball2 = dataApi.GetBall(i);
                 if (ball2 != ball)
                 {
-                    double distancex = ball2.Position.X - ball.Position.X;
-                    double distancey = ball2.Position.Y - ball.Position.Y;
-                    double distance = Math.Sqrt(distancex * distancex + distancey * distancey);
-                    if (distance <= IBall.Radius+IBall.Radius)
+                    double d = Vector2.Distance(ball.Position, ball2.Position);
+                    if (d - (IBall.Radius) <= 0)
                     {
-                        Vector2 collisionNormal = Vector2.Normalize(ball.Position -ball2.Position);
-                        Vector2 relativeVelocity = ball.Velocity - ball2.Velocity;
-
-                        float velocityAlongNormal = Vector2.Dot(relativeVelocity, collisionNormal);
-
-                        if (velocityAlongNormal > 0)
+                        Vector2 firstBallVelocity = CountCollisionSpeed(ball, ball2);
+                        Vector2 secondBallVelocity = CountCollisionSpeed(ball2, ball);
+                        if (Vector2.Distance(ball.Position, ball2.Position) > Vector2.Distance(ball.Position + firstBallVelocity, ball2.Position + secondBallVelocity))
+                        {
                             return;
-
-                        float impulseScalar = -(2 * velocityAlongNormal) / (IBall.Mass + IBall.Mass);
-                        Vector2 impulse = impulseScalar * collisionNormal;
-
-                        ball.Velocity -= impulse * (IBall.Mass / (IBall.Mass + IBall.Mass));
-                        ball2.Velocity += impulse * (IBall.Mass / (IBall.Mass + IBall.Mass));
+                        }
+                        ball.Velocity = firstBallVelocity;
+                        ball2.Velocity = secondBallVelocity;
                     }
                 }
             }
         }
-
+        private Vector2 CountCollisionSpeed(IBall ball, IBall ball2)
+        {
+            return ball.Velocity -
+                   (2 * IBall.Mass / (IBall.Mass + IBall.Mass) * (Vector2.Dot(ball.Velocity - ball2.Velocity, ball.Position - ball2.Position) * (ball.Position - ball2.Position))
+                    / (float)Math.Pow(Vector2.Distance(ball2.Position, ball.Position), 2));
+        }
 
         public override event EventHandler LogicEvent;
 
         private readonly object collisionLock = new object();
 
-        private void CheckCollisions(Object sender, EventArgs e)
+        private void CheckCollisions(object sender, EventArgs e)
         {
             lock (collisionLock)
             {
-                IBall ball = (IBall)sender;
-
-
-                if (sender != null)
+                if (sender is IBall ball)
                 {
                     BoardCollision(ball);
                     BallsCollision(ball);
                     LogicEvent?.Invoke(sender, EventArgs.Empty);
                 }
-
             }
-
         }
-
 
         public override void SpawnBalls(int amount)
         {
             dataApi.SpawnBalls(amount);
+            for (int i = 0; i < amount; i++)
+            {
+                var ball = dataApi.GetBall(i);
+                Console.WriteLine($"Ball {i} initialized at position: {ball.Position} with velocity: {ball.Velocity}");
+            }
         }
-
-
     }
 }
-
