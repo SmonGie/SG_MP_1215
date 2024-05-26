@@ -48,8 +48,8 @@ namespace Logic
                 IBall ball2 = dataApi.GetBall(i);
                 if (ball2 != ball)
                 {
-                    double d = Vector2.Distance(ball.Position, ball2.Position);
-                    if (d - (IBall.Radius) <= 0)
+                    double ballDistance = Vector2.Distance(ball.Position, ball2.Position);
+                    if (0 >= ballDistance - (IBall.Radius))
                     {
                         Vector2 firstBallVelocity = CountCollisionSpeed(ball, ball2);
                         Vector2 secondBallVelocity = CountCollisionSpeed(ball2, ball);
@@ -93,7 +93,6 @@ namespace Logic
             for (int i = 0; i < amount; i++)
             {
                 var ball = dataApi.GetBall(i);
-                Console.WriteLine($"Ball {i} initialized at position: {ball.Position} with velocity: {ball.Velocity}");
             }
         }
     }
