@@ -6,12 +6,13 @@ namespace Logic
 {
     internal class logicBall : AbstractLogicApi
     {
-        private readonly AbstractDataApi dataApi;
+        private readonly AbstractDataApi dataApi; // Pole przechowujące instancję API danych
 
+        // Konstruktor klasy logicBall, który przyjmuje API danych i subskrybuje zdarzenie BallEvent
         public logicBall(AbstractDataApi dataApi)
         {
-            dataApi.BallEvent += CheckCollisions;
-            this.dataApi = dataApi;
+            dataApi.BallEvent += CheckCollisions; //metoda CheckCollisions zostanie wykonana za każdym razem, gdy dataApi wywoła zdarzenie BallEvent
+            this.dataApi = dataApi; // Inicjalizacja pola dataApi
         }
 
         public override int GetNumberOfBalls()
@@ -19,18 +20,21 @@ namespace Logic
             return dataApi.GetNumberOfBalls();
         }
 
+        // Metoda zwracająca pozycję piłki na podstawie jej numeru w liście
         public override Vector2 GetBallPosition(int number)
         {
             return dataApi.GetBallPosition(number);
         }
 
+        // Metoda sprawdzająca kolizje piłki ze ścianami planszy
         private void BoardCollision(IBall ball)
         {
             Vector2 newVelocity = ball.Velocity;
 
+            // Sprawdzenie kolizji ze ścianami pionowymi
             if (ball.Position.X <= 0 || ball.Position.X + IBall.Radius >= dataApi.Width)
             {
-                newVelocity.X = -newVelocity.X;
+                newVelocity.X = -newVelocity.X;  // Odwrócenie kierunku prędkości w osi X
             }
 
             if (ball.Position.Y <= 0 || ball.Position.Y + IBall.Radius >= dataApi.Height)
@@ -38,7 +42,7 @@ namespace Logic
                 newVelocity.Y = -newVelocity.Y;
             }
 
-            ball.Velocity = newVelocity;
+            ball.Velocity = newVelocity; // Aktualizacja prędkości piłki
         }
 
         private void BallsCollision(IBall ball)
@@ -63,12 +67,14 @@ namespace Logic
                 }
             }
         }
+        // Metoda obliczająca nową prędkość piłki po kolizji
         private Vector2 CountCollisionSpeed(IBall ball, IBall ball2)
         {
-            Vector2 relativeVelocity = ball.Velocity - ball2.Velocity;
-            Vector2 relativePosition = ball.Position - ball2.Position;
-            float distanceSquared = relativePosition.LengthSquared();
+            Vector2 relativeVelocity = ball.Velocity - ball2.Velocity; // Obliczenie względnej prędkości piłek
+            Vector2 relativePosition = ball.Position - ball2.Position; // Obliczenie względnej pozycji piłek
+            float distanceSquared = relativePosition.LengthSquared(); // Obliczenie odległości między piłkami
 
+            // Obliczenie zmiany prędkości na skutek kolizji
             Vector2 velocityChange = (2 * IBall.Mass / (IBall.Mass + IBall.Mass)) *
                                      (Vector2.Dot(relativeVelocity, relativePosition) / distanceSquared) *
                                      relativePosition;
@@ -78,7 +84,7 @@ namespace Logic
 
         public override event EventHandler LogicEvent;
 
-        private readonly object collisionLock = new object();
+        private readonly object collisionLock = new object(); // Obiekt do blokowania sekcji krytycznej
 
         private void CheckCollisions(object sender, EventArgs e)
         {
@@ -86,19 +92,19 @@ namespace Logic
             {
                 if (sender is IBall ball)
                 {
-                    BoardCollision(ball);
-                    BallsCollision(ball);
-                    LogicEvent?.Invoke(sender, EventArgs.Empty);
+                    BoardCollision(ball); // Sprawdzenie kolizji ze ścianami
+                    BallsCollision(ball); // Sprawdzenie kolizji z innymi piłkami
+                    LogicEvent?.Invoke(sender, EventArgs.Empty); // Wywołanie zdarzenia logiki
                 }
             }
         }
 
         public override void SpawnBalls(int amount)
         {
-            dataApi.SpawnBalls(amount);
+            dataApi.SpawnBalls(amount); // Wywołanie metody API danych do tworzenia piłek
             for (int i = 0; i < amount; i++)
             {
-                _ = dataApi.GetBall(i);
+                _ = dataApi.GetBall(i); // Pobranie każdej nowej piłki
             }
         }
     }
