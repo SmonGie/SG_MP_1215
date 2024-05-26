@@ -15,7 +15,7 @@ namespace Data
 
         public abstract Vector2 GetBallPosition(int number);
 
-        // Zdefiniuj metodę statyczną, aby utworzyć wystąpienie klasy AbstractDataAPI.
+        // Definicja metody statycznnej, aby utworzyć wystąpienie klasy AbstractDataAPI.
         public static AbstractDataApi CreateInstance()
         {
             // Zwraca nową instancję klasy Data.
