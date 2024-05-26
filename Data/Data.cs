@@ -12,8 +12,8 @@ namespace Data
         public Data()
         {
             Balls = new List<IBall>();
-            Width = 600;
-            Height = 600;
+            Width = 500;
+            Height = 500;
         }
 
         public override event EventHandler BallEvent;

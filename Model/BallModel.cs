@@ -9,6 +9,11 @@ namespace Model
         private double x;
         private double y;
 
+        public double Radius
+        {
+            get { return 50; }
+        }
+
         public BallModel(double x, double y)
         {
             X = x;
@@ -33,11 +38,6 @@ namespace Model
                 RaisePropertyChanged();
             }
         }
-        public double Radius
-        {
-            get { return 50; }
-        }
-
 
         public event PropertyChangedEventHandler PropertyChanged;
 

@@ -6,15 +6,23 @@
         xmlns:local="clr-namespace:View"
         xmlns:vm="clr-namespace:ViewModel;assembly=ViewModel"
         mc:Ignorable="d"
-        Title="Balls" Height="800" Width="750">
+        Title="Balls" Height="650" Width="600">
     <Window.DataContext>
         <vm:ViewModel/>
     </Window.DataContext>
     <Grid>
-        <ItemsControl ItemsSource="{Binding Balls}">
+        <ItemsControl ItemsSource="{Binding Balls}" Margin="-2,-37,2,0" RenderTransformOrigin="0.5,0.5" Height="624" VerticalAlignment="Top">
+            <ItemsControl.RenderTransform>
+                <TransformGroup>
+                    <ScaleTransform/>
+                    <SkewTransform AngleY="0.076"/>
+                    <RotateTransform/>
+                    <TranslateTransform Y="-0.399"/>
+                </TransformGroup>
+            </ItemsControl.RenderTransform>
             <ItemsControl.ItemsPanel>
                 <ItemsPanelTemplate>
-                    <Canvas Background="Green" Width="600" Height="600" Margin="0, 0, 0, 0"/>
+                    <Canvas Background="Green" Width="500" Height="500" Margin="0, 0, 0, 0"/>
                 </ItemsPanelTemplate>
             </ItemsControl.ItemsPanel>
             <ItemsControl.ItemContainerStyle>
@@ -30,7 +38,16 @@
                 </DataTemplate>
             </ItemsControl.ItemTemplate>
         </ItemsControl>
-        <TextBox Text="{Binding NumberOfBalls}" Margin="275,754,275,10" Width="200" Height="20"/>
-        <Button Width="100" Height="20" Margin="150,754,500,10" Command="{Binding StartCommand}">Dodaj</Button>
+        <TextBox Text="{Binding NumberOfBalls}" Margin="200,536,200,0" Height="20" VerticalAlignment="Top"/>
+        <Button x:Name="Dodaj" Margin="0,568,0,0" Command="{Binding StartCommand}" Click="Button_Click" Content="Dodaj Kulkę" Background="#FFDDDDDD" RenderTransformOrigin="0.5,0.5" HorizontalAlignment="Center" Width="100" Height="19" VerticalAlignment="Top">
+            <Button.RenderTransform>
+                <TransformGroup>
+                    <ScaleTransform/>
+                    <SkewTransform/>
+                    <RotateTransform Angle="0.137"/>
+                    <TranslateTransform/>
+                </TransformGroup>
+            </Button.RenderTransform>
+        </Button>
     </Grid>
 </Window>

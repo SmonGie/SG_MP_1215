@@ -65,9 +65,15 @@ namespace Logic
         }
         private Vector2 CountCollisionSpeed(IBall ball, IBall ball2)
         {
-            return ball.Velocity -
-                   (2 * IBall.Mass / (IBall.Mass + IBall.Mass) * (Vector2.Dot(ball.Velocity - ball2.Velocity, ball.Position - ball2.Position) * (ball.Position - ball2.Position))
-                    / (float)Math.Pow(Vector2.Distance(ball2.Position, ball.Position), 2));
+            Vector2 relativeVelocity = ball.Velocity - ball2.Velocity;
+            Vector2 relativePosition = ball.Position - ball2.Position;
+            float distanceSquared = relativePosition.LengthSquared();
+
+            Vector2 velocityChange = (2 * IBall.Mass / (IBall.Mass + IBall.Mass)) *
+                                     (Vector2.Dot(relativeVelocity, relativePosition) / distanceSquared) *
+                                     relativePosition;
+
+            return ball.Velocity - velocityChange;
         }
 
         public override event EventHandler LogicEvent;
@@ -92,7 +98,7 @@ namespace Logic
             dataApi.SpawnBalls(amount);
             for (int i = 0; i < amount; i++)
             {
-                var ball = dataApi.GetBall(i);
+                _ = dataApi.GetBall(i);
             }
         }
     }
