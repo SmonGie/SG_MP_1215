@@ -16,17 +16,17 @@ namespace Model
 
         public BallModel(double x, double y)
         {
-            X = x;
+            X = x; // Inicjalizacja współrzędnej X kuli
             Y = y;
         }
-
+        // Właściwość X reprezentująca współrzędną X kuli
         public double X
         {
-            get { return x; }
+            get { return x; } // Zwraca wartość współrzędnej X
             set
             {
-                x = value;
-                RaisePropertyChanged();
+                x = value; // Ustawia wartość współrzędnej X
+                RaisePropertyChanged(); // Wywołuje metodę powiadamiającą o zmianie
             }
         }
         public double Y
@@ -38,7 +38,7 @@ namespace Model
                 RaisePropertyChanged();
             }
         }
-
+        // Zdarzenie PropertyChanged wywoływane w przypadku zmiany właściwości
         public event PropertyChangedEventHandler PropertyChanged;
 
         private void RaisePropertyChanged([CallerMemberName] string propertyName = "")
