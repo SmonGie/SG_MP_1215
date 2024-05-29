@@ -54,31 +54,47 @@ namespace Data
 
         public Vector2 Position
         {
-            get => _position;
+            get
+            {
+                lock (movelock)
+                {
+                    return _position;
+                }
+            }
             private set
             {
-                _position = value;
+                lock (movelock)
+                {
+                    _position = value;
+                }
             }
         }
 
         public Vector2 Velocity
         {
-            get { return _velocity; }
+            get
+            {
+                lock (movelock)
+                {
+                    return _velocity;
+                }
+            }
             set
             {
-                _velocity = value;
+                lock (movelock)
+                {
+                    _velocity = value;
+                }
             }
         }
 
         private readonly object movelock = new object(); // Obiekt do blokowania sekcji krytycznej
+        private readonly object velocitylock = new object(); // Obiekt do blokowania sekcji krytycznej
 
         public void move()
-        {
-            lock (movelock)
-            {
+        {       
                 Position += Velocity * MovingTime*0.1f; // Aktualizacja pozycji
-                OnPositionChange(); // Wywołanie zdarzenia zmiany pozycji
-            }
+                OnPositionChange(); // Wywołanie zdarzenia zmiany pozycji       
         }
 
         private int MovingTime
