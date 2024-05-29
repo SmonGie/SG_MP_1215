@@ -74,14 +74,14 @@ namespace Data
         {
             get
             {
-                lock (movelock)
+                lock (velocitylock)
                 {
                     return _velocity;
                 }
             }
             set
             {
-                lock (movelock)
+                lock (velocitylock)
                 {
                     _velocity = value;
                 }
