@@ -57,18 +57,18 @@ namespace Data
 
         public Vector2 Position
         {
-            get
+            get //get jest używana do odczytu wartości pola _position
             {
-                lock (movelock)
+                lock (movelock) //Blokada movelock zapewnia, że dostęp do pola _position jest synchronizowany. 
                 {
-                    return _position;
+                    return _position; //metoda zwraca wartość _position
                 }
             }
             private set
             {
-                lock (movelock)
+                lock (movelock) //tylko jeden wątek może zapisywać wartość _position
                 {
-                    _position = value;
+                    _position = value; //metoda ustawia wartość _position na przekazaną wartość
                 }
             }
         }
@@ -139,9 +139,9 @@ namespace Data
 
     public class BallEventArgs : EventArgs
     {
-        public int BallIndex { get; }
+        public int BallIndex { get; } // Indeks piłki
 
-        public BallEventArgs(int ballIndex)
+        public BallEventArgs(int ballIndex) // Konstruktor inicjalizujący indeks piłki
         {
             BallIndex = ballIndex;
         }
