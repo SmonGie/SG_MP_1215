@@ -9,7 +9,7 @@ namespace Logic
         public abstract int GetNumberOfBalls();
         public abstract void SpawnBalls(int amount);
 
-        public abstract event EventHandler LogicEvent;
+        public abstract event EventHandler<BallEventArgs> LogicEvent;
 
         public static AbstractLogicApi CreateInstance(AbstractDataApi DataInformation)
         {

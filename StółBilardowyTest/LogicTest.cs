@@ -44,7 +44,7 @@ namespace Logic.Tests
             Balls = new List<IBall>();
         }
 
-        public override event EventHandler BallEvent
+        public override event EventHandler<BallEventArgs> BallEvent
         {
             add { }
             remove { }

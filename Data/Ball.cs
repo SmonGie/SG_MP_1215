@@ -22,6 +22,9 @@ namespace Data
 
         private Stopwatch stopwatch = new Stopwatch(); // Stoper do mierzenia czasu
 
+        private readonly object movelock = new object(); // Obiekt do blokowania sekcji krytycznej
+        private readonly object velocitylock = new object(); // Obiekt do blokowania sekcji krytycznej
+
         // Konstruktor inicjalizujący pozycję i prędkość piłki
         public Ball(int x, int y)
         {
@@ -88,9 +91,6 @@ namespace Data
             }
         }
 
-        private readonly object movelock = new object(); // Obiekt do blokowania sekcji krytycznej
-        private readonly object velocitylock = new object(); // Obiekt do blokowania sekcji krytycznej
-
         public void move()
         {       
                 Position += Velocity * MovingTime*0.1f; // Aktualizacja pozycji
@@ -118,6 +118,7 @@ namespace Data
                     stopwatch.Start(); // Startowanie stopera
 
                     move(); // Wykonanie ruchu piłki
+
                     stopwatch.Stop(); // Zatrzymanie stopera
 
                     // Obliczanie czasu oczekiwania
@@ -134,7 +135,15 @@ namespace Data
                 }
             });
         }
+    }
 
-        
+    public class BallEventArgs : EventArgs
+    {
+        public int BallIndex { get; }
+
+        public BallEventArgs(int ballIndex)
+        {
+            BallIndex = ballIndex;
+        }
     }
 }

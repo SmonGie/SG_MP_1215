@@ -82,20 +82,18 @@ namespace Logic
             return ball.Velocity - velocityChange;
         }
 
-        public override event EventHandler LogicEvent;
+        public override event EventHandler<BallEventArgs> LogicEvent;
 
         private readonly object collisionLock = new object(); // Obiekt do blokowania sekcji krytycznej
 
-        private void CheckCollisions(object sender, EventArgs e)
+        private void CheckCollisions(object sender, BallEventArgs e)
         {
             lock (collisionLock)
-            {
-                if (sender is IBall ball)
-                {
-                    BoardCollision(ball); // Sprawdzenie kolizji ze ścianami
-                    BallsCollision(ball); // Sprawdzenie kolizji z innymi piłkami
-                    LogicEvent?.Invoke(sender, EventArgs.Empty); // Wywołanie zdarzenia logiki
-                }
+            {             
+                    IBall movingball = dataApi.GetBall(e.BallIndex);
+                    BoardCollision(movingball); // Sprawdzenie kolizji ze ścianami
+                    BallsCollision(movingball); // Sprawdzenie kolizji z innymi piłkami
+                    LogicEvent?.Invoke(this, new BallEventArgs(e.BallIndex));                
             }
         }
 

@@ -9,7 +9,7 @@ namespace Data
         public abstract int Width { get; }
         public abstract int Height { get; }
 
-        public abstract event EventHandler BallEvent;
+        public abstract event EventHandler<BallEventArgs> BallEvent;
         public abstract void SpawnBalls(int amount);
         public abstract IBall GetBall(int number);
 
