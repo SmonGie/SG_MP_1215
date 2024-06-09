@@ -5,6 +5,7 @@ namespace Data
     //Definicja klasy Data jako wewnetrzenj i podklasy AbstractDataApi
     internal class Data : AbstractDataApi
     {
+        private Logger _logger;
         public override int Width => _width;
         public override int Height => _height;
   
@@ -19,22 +20,34 @@ namespace Data
         {
             return _balls[number].Position;
         }
-
+        public Data()
+        {
+            _logger = new Logger();
+        }
         public override void SpawnBalls(int amount)
         {
 
-
+            int number = _balls.Count;
             Random random = new Random();
             for (int i = 0; i < amount; i++)
             {
                 // Tworzenie nowej piłki z losową pozycją w obrębie planszy
-                Ball ball = new Ball(random.Next(100,Width-100), random.Next(Height-100));
+                Ball ball = new Ball(random.Next(100,Width-100), random.Next(Height-100), i + number);
                 int ballIndex = _balls.Count;
-                ball.PositionChange += (sender, args) => BallEvent?.Invoke(this, new BallEventArgs(ballIndex));
+                ball.PositionChange += BallLogger_PositionChanged;
                 _balls.Add(ball);
             }
 
     }
+        private void BallLogger_PositionChanged(object sender, EventArgs e)
+        {
+            if (sender != null)
+            {
+                int ballIndex = _balls.IndexOf((IBall)sender);
+                BallEvent?.Invoke(sender, new BallEventArgs(ballIndex));
+                _logger.AddObjectToQueue((IBall)sender, DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss.fff"));
+            }
+        }
 
         // Metoda zwracająca liczbę piłek w liście
         public override int GetNumberOfBalls()

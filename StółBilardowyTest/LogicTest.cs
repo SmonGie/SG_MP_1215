@@ -91,6 +91,7 @@ namespace Logic.Tests
 
         private class FakeBall : IBall
         {
+            public int ID { get; }
             public Vector2 Position { get; }
             public Vector2 Velocity { get; set; }
             public float Mass { get; }

@@ -10,24 +10,26 @@ namespace Data
         Vector2 Velocity { get; set; }
         const int Radius = 50;
         const int Mass = 5;
+        int ID { get; }
 
     }
     internal class Ball : IBall
     {
 
-        
+        public int ID { get; }
         private Vector2 _position;
         private Vector2 _velocity;
         private int _MovingTime; // Pole przechowujące czas ruchu
 
         private Stopwatch stopwatch = new Stopwatch(); // Stoper do mierzenia czasu
-
+        private static Logger logger;
         private readonly object movelock = new object(); // Obiekt do blokowania sekcji krytycznej
         private readonly object velocitylock = new object(); // Obiekt do blokowania sekcji krytycznej
 
         // Konstruktor inicjalizujący pozycję i prędkość piłki
-        public Ball(int x, int y)
+        public Ball(int x, int y, int id)
         {
+            ID = id;
             Random random = new Random();
             _position = new Vector2(x, y);
 
@@ -37,13 +39,8 @@ namespace Data
                 _velocity = new Vector2(random.Next(-4, 4), random.Next(-4, 4));
             }
 
-            MovingTime = 1; // Inicjalizacja czasu ruchu
-
             MoveBall(); // Rozpoczęcie ruchu piłki
         }
-
-
-
 
 
         // Zdarzenie wywoływane przy zmianie pozycji
@@ -91,9 +88,9 @@ namespace Data
             }
         }
 
-        public void move()
+        public void move(int Time)
         {       
-                Position += Velocity * MovingTime*0.1f; // Aktualizacja pozycji
+                Position += Velocity * Time * 0.1f; // Aktualizacja pozycji
                 OnPositionChange(); // Wywołanie zdarzenia zmiany pozycji       
         }
 
@@ -111,13 +108,14 @@ namespace Data
         {
             Task.Run(async () =>
             {
+                MovingTime = 1;
                 int wait = 0;
                 while (true)
                 {
                     stopwatch.Restart(); // Restartowanie stopera
                     stopwatch.Start(); // Startowanie stopera
 
-                    move(); // Wykonanie ruchu piłki
+                    move(MovingTime); // Wykonanie ruchu piłki
 
                     stopwatch.Stop(); // Zatrzymanie stopera
 
