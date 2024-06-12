@@ -10,7 +10,7 @@ namespace Data
         // Klasa reprezentująca serializowane dane piłki
         private class BallSerialization
         {
-            public BallSerialization(int id, Vector2 position, string date)
+            public BallSerialization(int id, Vector2 position, DateTime date)
             {
                 X = position.X;
                 Y = position.Y;
@@ -20,9 +20,9 @@ namespace Data
             public float X { get; } // Współrzędna X piłki
             public float Y { get; }
             public int Id { get; } // Unikalny identyfikator piłki
-            public string Date { get; } // Data logowania danych
+            public DateTime Date { get; } // Data logowania danych
         }
-       
+
         ConcurrentQueue<BallSerialization> queue; // Kolejka równoległa do przechowywania serializowanych danych piłki
         public Logger()
         {
@@ -49,14 +49,13 @@ namespace Data
             });
         }
         // Metoda dodająca obiekt piłki do kolejki w celu zalogowania
-        public void AddObjectToQueue(IBall ball, string date)
+        public void AddObjectToQueue(IBall ball, DateTime date)
         {
             lock (queue)
             {
                 if (queue.Count < buffer)
                 {
-                    queue.Enqueue(new BallSerialization(ball.ID, ball.Position,
-                        date)); // Dodanie serializowanych danych piłki do kolejki
+                    queue.Enqueue(new BallSerialization(ball.ID, ball.Position, date)); // Dodanie serializowanych danych piłki do kolejki
                 }
                 else
                 {

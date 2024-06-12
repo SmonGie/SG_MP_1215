@@ -9,7 +9,6 @@ namespace Data
         Vector2 Position { get; }
         Vector2 Velocity { get; set; }
         const int Radius = 50;
-        const int Mass = 5;
         int ID { get; }
 
     }
@@ -19,11 +18,10 @@ namespace Data
         public int ID { get; }
         private Vector2 _position;
         private Vector2 _velocity;
-        private static Logger logger;
         private readonly int Break = 5;
         private readonly object movelock = new object(); // Obiekt do blokowania sekcji krytycznej
         private readonly object velocitylock = new object(); // Obiekt do blokowania sekcji krytycznej
-
+        public event EventHandler<Tuple<Vector2, int, DateTime>> PositionChange;
         // Konstruktor inicjalizujący pozycję i prędkość piłki
         public Ball(int x, int y, int id)
         {
@@ -42,11 +40,10 @@ namespace Data
 
 
         // Zdarzenie wywoływane przy zmianie pozycji
-        public event EventHandler PositionChange;
 
         internal void OnPositionChange()
         {
-            PositionChange?.Invoke(this, EventArgs.Empty);
+            PositionChange?.Invoke(this, new Tuple<Vector2, int, DateTime>(Position, ID, DateTime.Now));
         }
        
 
@@ -125,6 +122,7 @@ namespace Data
                 }
             });
         }
+
     }
 
     public class BallEventArgs : EventArgs

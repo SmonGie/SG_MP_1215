@@ -8,6 +8,7 @@ namespace Logic
     {
         private readonly AbstractDataApi dataApi; // Pole przechowujące instancję API danych
 
+        private const int mass = 5;
         // Konstruktor klasy logicBall, który przyjmuje API danych i subskrybuje zdarzenie BallEvent
         public logicBall(AbstractDataApi dataApi)
         {
@@ -75,7 +76,7 @@ namespace Logic
             float distanceSquared = relativePosition.LengthSquared(); // Obliczenie odległości między piłkami
 
             // Obliczenie zmiany prędkości na skutek kolizji
-            Vector2 velocityChange = (2 * IBall.Mass / (IBall.Mass + IBall.Mass)) *
+            Vector2 velocityChange = (2 * mass / (mass + mass)) *
                                      (Vector2.Dot(relativeVelocity, relativePosition) / distanceSquared) *
                                      relativePosition;
 

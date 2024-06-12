@@ -34,18 +34,18 @@ namespace Data
                 // Tworzenie nowej piłki z losową pozycją w obrębie planszy
                 Ball ball = new Ball(random.Next(100,Width-100), random.Next(Height-100), i + number);
                 int ballIndex = _balls.Count;
-                ball.PositionChange += BallLogger_PositionChanged;
+                ball.PositionChange += BallLogger_PositionChange;
                 _balls.Add(ball);
             }
 
     }
-        private void BallLogger_PositionChanged(object sender, EventArgs e)
+        private void BallLogger_PositionChange(object sender, Tuple<Vector2, int, DateTime> e)
         {
             if (sender != null)
             {
                 int ballIndex = _balls.IndexOf((IBall)sender);
                 BallEvent?.Invoke(sender, new BallEventArgs(ballIndex));
-                _logger.AddObjectToQueue((IBall)sender, DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss.fff"));
+                _logger.AddObjectToQueue((IBall)sender, e.Item3);
             }
         }
 
