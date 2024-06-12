@@ -19,10 +19,8 @@ namespace Data
         public int ID { get; }
         private Vector2 _position;
         private Vector2 _velocity;
-        private int _MovingTime; // Pole przechowujące czas ruchu
-
-        private Stopwatch stopwatch = new Stopwatch(); // Stoper do mierzenia czasu
         private static Logger logger;
+        private readonly int Break = 5;
         private readonly object movelock = new object(); // Obiekt do blokowania sekcji krytycznej
         private readonly object velocitylock = new object(); // Obiekt do blokowania sekcji krytycznej
 
@@ -94,39 +92,33 @@ namespace Data
                 OnPositionChange(); // Wywołanie zdarzenia zmiany pozycji       
         }
 
-        private int MovingTime
-        {
-            get => _MovingTime;
-            set
-            {
-                _MovingTime = value;
-            }
-        }
 
         // Metoda uruchamiająca ruch piłki w osobnym wątku
         private void MoveBall()
         {
             Task.Run(async () =>
             {
-                MovingTime = 1;
-                int wait = 0;
+                Stopwatch stopwatch = new Stopwatch();
+                stopwatch.Start(); // Startowanie stopera
+                long lastUpdateTime = stopwatch.ElapsedMilliseconds;
+                int wait;
                 while (true)
                 {
-                    stopwatch.Restart(); // Restartowanie stopera
-                    stopwatch.Start(); // Startowanie stopera
 
-                    move(MovingTime); // Wykonanie ruchu piłki
+                    long currentTime = stopwatch.ElapsedMilliseconds;
+                    int elapsedTime = (int)(currentTime - lastUpdateTime);
 
-                    stopwatch.Stop(); // Zatrzymanie stopera
+                    move(elapsedTime); // Wykonanie ruchu piłki
 
-                    // Obliczanie czasu oczekiwania
-                    if (MovingTime - stopwatch.ElapsedMilliseconds < 0)
+                    lastUpdateTime = currentTime;
+                    long howLongToWait = currentTime + Break;
+                    if (stopwatch.ElapsedMilliseconds < howLongToWait)
                     {
-                        wait = 0;
+                        wait = Break;
                     }
                     else
                     {
-                        wait = MovingTime - (int)stopwatch.ElapsedMilliseconds;
+                        wait = 0;
                     }
 
                     await Task.Delay(wait); // Oczekiwanie przez wyliczony czas
