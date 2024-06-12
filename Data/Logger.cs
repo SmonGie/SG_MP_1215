@@ -29,6 +29,23 @@ namespace Data
             queue = new ConcurrentQueue<BallSerialization>(); // Inicjalizacja kolejki równoległej
             Write(); // Rozpoczęcie zapisu danych do pliku
         }
+        // Metoda dodająca obiekt piłki do kolejki w celu zalogowania
+
+        public void AddObjectToQueue(IBall ball, DateTime date)
+        {
+            lock (queue)
+            {
+                if (queue.Count < buffer)
+                {
+                    queue.Enqueue(new BallSerialization(ball.ID, ball.Position, date)); // Dodanie serializowanych danych piłki do kolejki
+                }
+                else
+                {
+                    return;
+                }
+            }
+        }
+
         // Metoda asynchroniczna do zapisu danych z kolejki do pliku
         private void Write()
         {
@@ -47,21 +64,6 @@ namespace Data
                     await streamWriter.FlushAsync(); // Wypłukanie obiektu strumienia w celu zapewnienia zapisu danych do pliku
                 }
             });
-        }
-        // Metoda dodająca obiekt piłki do kolejki w celu zalogowania
-        public void AddObjectToQueue(IBall ball, DateTime date)
-        {
-            lock (queue)
-            {
-                if (queue.Count < buffer)
-                {
-                    queue.Enqueue(new BallSerialization(ball.ID, ball.Position, date)); // Dodanie serializowanych danych piłki do kolejki
-                }
-                else
-                {
-                    return;
-                }
-            }
         }
     }
 }
