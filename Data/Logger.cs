@@ -41,7 +41,7 @@ namespace Data
                 }
                 else
                 {
-                    return;
+                    throw new InvalidOperationException("Queue is full. Cannot add object to the queue.");
                 }
             }
         }
