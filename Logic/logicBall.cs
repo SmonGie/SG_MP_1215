@@ -50,18 +50,23 @@ namespace Logic
         {
             for (int i = 0; i < dataApi.GetNumberOfBalls(); i++)
             {
-                IBall ball2 = dataApi.GetBall(i);
+                IBall ball2 = dataApi.GetBall(i); // Pobranie kolejnej piłki do sprawdzenia kolizji
                 if (ball2 != ball)
                 {
+                    // Obliczenie odległości między piłkami
                     double ballDistance = Vector2.Distance(ball.Position, ball2.Position);
+                    // Sprawdzenie, czy doszło do kolizji
                     if (0 >= ballDistance - (IBall.Radius))
                     {
+                        // Obliczenie nowych prędkości po kolizji
                         Vector2 firstBallVelocity = CountCollisionSpeed(ball, ball2);
                         Vector2 secondBallVelocity = CountCollisionSpeed(ball2, ball);
+                        // Sprawdzenie, czy odległość po kolizji nie zwiększy się
                         if (Vector2.Distance(ball.Position, ball2.Position) > Vector2.Distance(ball.Position + firstBallVelocity, ball2.Position + secondBallVelocity))
                         {
                             return;
                         }
+                        // Aktualizacja prędkości piłek po kolizji
                         ball.Velocity = firstBallVelocity;
                         ball2.Velocity = secondBallVelocity;
                     }

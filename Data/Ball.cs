@@ -21,7 +21,7 @@ namespace Data
         private readonly int Break = 5;
         private readonly object movelock = new object(); // Obiekt do blokowania sekcji krytycznej
         private readonly object velocitylock = new object(); // Obiekt do blokowania sekcji krytycznej
-        public event EventHandler<Tuple<Vector2, int, DateTime>> PositionChange;
+        public event EventHandler<Tuple<Vector2, int, DateTime>> PositionChange; // Zdarzenie informujące o zmianie pozycji piłki
         // Konstruktor inicjalizujący pozycję i prędkość piłki
         public Ball(int x, int y, int id)
         {
