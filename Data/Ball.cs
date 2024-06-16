@@ -95,20 +95,21 @@ namespace Data
         {
             Task.Run(async () =>
             {
-                Stopwatch stopwatch = new Stopwatch();
+                Stopwatch stopwatch = new Stopwatch(); // Inicjalizacja stopera
                 stopwatch.Start(); // Startowanie stopera
-                long lastUpdateTime = stopwatch.ElapsedMilliseconds;
-                int wait;
+                long lastUpdateTime = stopwatch.ElapsedMilliseconds; // Inicjalizacja czasu ostatniej aktualizacji
+                int wait; // Zmienna do przechowywania czasu oczekiwania
                 while (true)
                 {
 
-                    long currentTime = stopwatch.ElapsedMilliseconds;
-                    int elapsedTime = (int)(currentTime - lastUpdateTime);
+                    long currentTime = stopwatch.ElapsedMilliseconds; // Pobranie bieżącego czasu
+                    int elapsedTime = (int)(currentTime - lastUpdateTime); // Obliczenie upływu czasu
 
                     move(elapsedTime); // Wykonanie ruchu piłki
 
-                    lastUpdateTime = currentTime;
-                    long howLongToWait = currentTime + Break;
+                    lastUpdateTime = currentTime; // Aktualizacja czasu ostatniej aktualizacji
+                    long howLongToWait = currentTime + Break; // Obliczenie czasu oczekiwania
+                    // Ustawienie czasu oczekiwania w zależności od aktualnego czasu
                     if (stopwatch.ElapsedMilliseconds < howLongToWait)
                     {
                         wait = Break;
